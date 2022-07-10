@@ -40,6 +40,13 @@ public class Balance {
     private BigDecimal debitBalance = BigDecimal.ZERO;
 
     /**
+     * Актуальная задолженность
+     */
+    @NonNull
+    @Column(name = "credit_debt")
+    private BigDecimal creditDebt = BigDecimal.ZERO;
+
+    /**
      * Дата и время последнего обновления информации по счету
      */
     @NonNull

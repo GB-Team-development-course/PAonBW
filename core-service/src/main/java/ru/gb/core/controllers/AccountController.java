@@ -11,7 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.gb.core.converters.AccountConverter;
 import ru.gb.core.dto.AccountDto;
+import ru.gb.core.dto.CreateCreditAccountDto;
+import ru.gb.core.dto.CreateDebitAccountDto;
+import ru.gb.core.enums.Currency;
 import ru.gb.core.services.AccountService;
+import ru.gb.core.services.AccountOperationService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,69 +26,69 @@ import java.util.stream.Collectors;
 @Tag(name = "Счета", description = "Методы работы со счетами")
 public class AccountController {
 
+    //todo необходимо разработать класс с ответами на запросы
+
     private final AccountService accountService;
     private final AccountConverter accountConverter;
+    private final AccountOperationService accountOperationService;
 
-    @Operation(
-            summary = "Запрос на получение счёта по номеру",
-            responses = {
-                    @ApiResponse(
-                            description = "Успешный ответ", responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = AccountDto.class))
-                    )
-            }
-    )
+    @Operation(summary = "Запрос на получение счёта по номеру", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = AccountDto.class)))})
     @GetMapping("/{accountNum}")
-    public AccountDto findByAccountNumber(@PathVariable @Parameter(description = "Номер счёта", required = true) String accountNum) {
+    public AccountDto findByAccountNumber(@RequestHeader Long clientId,
+                                          @PathVariable @Parameter(description = "Номер счёта", required = true) String accountNum) {
         //todo дописать exceptions, пока тут будет заглушка
         return accountConverter.entityToDto(accountService
-                .findById(accountNum)
+                .findByClientIdAndAccountNumber(clientId, accountNum)
                 .orElseThrow(() -> new RuntimeException("Счёт не найден")));
     }
-    @Operation(
-            summary = "Запрос на получение всех счетов",
-            responses = {
-                    @ApiResponse(
-                            description = "Успешный ответ", responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = List.class))
-                    )
-            }
-    )
+
+    @Operation(summary = "Запрос на получение всех счетов", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = List.class)))})
     @GetMapping("/")
-    public List<AccountDto> findAll() {
-        return accountService.findAll()
+    public List<AccountDto> findAll(@RequestHeader Long clientId) {
+        return accountService.findAll(clientId)
                 .stream()
                 .map(accountConverter::entityToDto)
                 .collect(Collectors.toList());
     }
-    @Operation(
-            summary = "Запрос на создание кредитного счёта",
-            responses = {
-                    @ApiResponse(
-                            description = "Успешный ответ", responseCode = "200"
-                    )
-            }
-    )
+
+    @Operation(summary = "Запрос на создание кредитного счёта", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200")})
     @PostMapping("/createCredit")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCreditAccount() {
-        //todo создать новый кредитный счёт,пока заглушка,
-        // передавать для создания ничего не надо, будем обрабатывать по внутренней логике
+    public AccountDto createCreditAccount(@RequestHeader Long clientId, @RequestBody CreateCreditAccountDto createCreditAccountDto) {
+        return accountConverter.entityToDto(
+                accountOperationService
+                        .createCreditAccount(
+                                clientId,
+                                Currency.getById(createCreditAccountDto.getCurrency()),
+                                createCreditAccountDto.getCredit()));
     }
 
-    @Operation(
-            summary = "Запрос на создание дебетового счёта",
-            responses = {
-                    @ApiResponse(
-                            description = "Успешный ответ", responseCode = "200"
-                    )
-            }
-    )
+    @Operation(summary = "Запрос на создание дебетового счёта", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200")})
     @PostMapping("/createDebit")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createDebitAccount() {
-        //todo создать новый дебетовый счёт,пока заглушка,
-        // передавать для создания ничего не надо, будем обрабатывать по внутренней логике
+    public AccountDto createDebitAccount(@RequestHeader Long clientId, @RequestBody CreateDebitAccountDto createDebitAccountDto) {
+        return accountConverter.entityToDto(
+                accountOperationService.createDebitAccount(
+                        clientId,
+                        Currency.getById(createDebitAccountDto.getCurrency())));
     }
 
+
+    @PutMapping("/blockAccount/{accountNum}")
+    @ResponseStatus(HttpStatus.OK)
+    public AccountDto blockAccount(@RequestHeader Long clientId, @PathVariable String accountNum) {
+        return accountConverter.entityToDto(accountOperationService
+                .blockAccount(clientId, accountNum)
+                //todo дописать exceptions, пока тут будет заглушка
+                .orElseThrow(() -> new RuntimeException("Счёт невозможно заблокировать")));
+    }
+
+    @PutMapping("/closeAccount/{accountNum}")
+    @ResponseStatus(HttpStatus.OK)
+    public AccountDto closeAccount(@RequestHeader Long clientId, @PathVariable String accountNum) {
+        return accountConverter.entityToDto(accountOperationService
+                .closeAccount(clientId, accountNum)
+                //todo дописать exceptions, пока тут будет заглушка
+                .orElseThrow(() -> new RuntimeException("Счёт невозможно закрыть")));
+    }
 }
