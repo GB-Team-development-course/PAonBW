@@ -11,8 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.gb.core.converters.AccountConverter;
 import ru.gb.core.dto.AccountDto;
-import ru.gb.core.dto.CreateCreditAccountDto;
-import ru.gb.core.dto.CreateDebitAccountDto;
+import ru.gb.core.dto.CreateAccountRequest;
 import ru.gb.core.enums.Currency;
 import ru.gb.core.services.AccountService;
 import ru.gb.core.services.AccountOperationService;
@@ -54,7 +53,7 @@ public class AccountController {
     @Operation(summary = "Запрос на создание кредитного счёта", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200")})
     @PostMapping("/createCredit")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto createCreditAccount(@RequestHeader Long clientId, @RequestBody CreateCreditAccountDto createCreditAccountDto) {
+    public AccountDto createCreditAccount(@RequestHeader Long clientId, @RequestBody CreateAccountRequest createCreditAccountDto) {
         return accountConverter.entityToDto(
                 accountOperationService
                         .createCreditAccount(
@@ -66,7 +65,7 @@ public class AccountController {
     @Operation(summary = "Запрос на создание дебетового счёта", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200")})
     @PostMapping("/createDebit")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto createDebitAccount(@RequestHeader Long clientId, @RequestBody CreateDebitAccountDto createDebitAccountDto) {
+    public AccountDto createDebitAccount(@RequestHeader Long clientId, @RequestBody CreateAccountRequest createDebitAccountDto) {
         return accountConverter.entityToDto(
                 accountOperationService.createDebitAccount(
                         clientId,
