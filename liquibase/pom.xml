@@ -11,11 +11,25 @@
 
     <artifactId>liquibase</artifactId>
 
+    <properties>
+        <testContainers.version>1.16.0</testContainers.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <version>4.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>${testContainers.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${testContainers.version}</version>
         </dependency>
     </dependencies>
 

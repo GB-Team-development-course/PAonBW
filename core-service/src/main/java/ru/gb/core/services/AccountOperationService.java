@@ -74,6 +74,7 @@ public class AccountOperationService {
         Optional<Account> account = accountService.findByClientIdAndAccountNumber(clientId, accountNum);
         if (account.isPresent()) {
             account.get().setAccountStatus(AccountStatus.BLOCKED);
+            account.get().setDtBlocked(LocalDateTime.now());
         } else {
             //todo прокинуть исключение или отрицательный ответ
         }
@@ -85,6 +86,7 @@ public class AccountOperationService {
         Optional<Account> account = accountService.findByClientIdAndAccountNumber(clientId, accountNum);
         if (account.isPresent() && checkClosingPossibility(account.get())) {
             account.get().setAccountStatus(AccountStatus.CLOSED);
+            account.get().setDtClosed(LocalDateTime.now());
         } else {
             //todo прокинуть исключение или отрицательный ответ
         }

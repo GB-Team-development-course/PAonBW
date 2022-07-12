@@ -15,7 +15,7 @@ public class Balance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "balance_gen")
-    @SequenceGenerator(name = "balance_gen", sequenceName = "balance_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "balance_gen", sequenceName = "balances_id_seq", allocationSize = 1)
     private Long id;
 
     /**
