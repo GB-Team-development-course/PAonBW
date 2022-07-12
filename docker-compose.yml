@@ -18,6 +18,19 @@ services:
       - main-service
     ports:
       - "5555:5555"
+    environment:
+      - 'jwt.secret=h4f8093h4f983yhrt9834hr0934hf0hf493g493gf438rh438th34g34g'
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    depends_on:
+      - main-service
+    ports:
+      - "9098:9098"
+    environment:
+      - 'spring.datasource.url=jdbc:postgresql://postgres_test_db:5432/postgres'
+      - 'spring.datasource.hikari.schema=test_schema'
+      - 'jwt.secret=h4f8093h4f983yhrt9834hr0934hf0hf493g493gf438rh438th34g34g'
   front-service:
     build: ./front-service
     container_name: front-service
