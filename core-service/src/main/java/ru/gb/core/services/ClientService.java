@@ -12,8 +12,8 @@ import java.util.Optional;
 public class ClientService {
     private final ClientRepository repository;
 
-    public Optional<Client> findById(Long id) {
-        return repository.findById(id);
+    public Optional<Client> findByUsername(String username) {
+        return repository.findByUsername(username);
     }
 
 }

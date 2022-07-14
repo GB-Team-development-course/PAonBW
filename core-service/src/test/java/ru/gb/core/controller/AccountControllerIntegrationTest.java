@@ -82,7 +82,7 @@ public class AccountControllerIntegrationTest {
 
         RequestBuilder request = MockMvcRequestBuilders
                 .post(URL_COMMON + "/createDebit")
-                .header("clientId",1L)
+                .header("username","John")
                 .content(objectMapper.writeValueAsString(accountRequest))
                 .contentType(MediaType.APPLICATION_JSON_VALUE);
 
@@ -121,7 +121,7 @@ public class AccountControllerIntegrationTest {
 
         RequestBuilder request = MockMvcRequestBuilders
                 .post(URL_COMMON + "/createCredit")
-                .header("clientId",2L)
+                .header("username","Jack")
                 .content(objectMapper.writeValueAsString(accountRequest))
                 .contentType(MediaType.APPLICATION_JSON_VALUE);
 
@@ -159,7 +159,7 @@ public class AccountControllerIntegrationTest {
 
         RequestBuilder request = MockMvcRequestBuilders
                 .put(URL_COMMON + "/blockAccount/" + blockingAccount)
-                .header("clientId", 1L);
+                .header("username", "John");
 
         MvcResult requestResult = mockMvc
                 .perform(request)
@@ -195,7 +195,7 @@ public class AccountControllerIntegrationTest {
 
         RequestBuilder request = MockMvcRequestBuilders
                 .put(URL_COMMON + "/closeAccount/" + closingAccount)
-                .header("clientId", 3L);
+                .header("username", "Bob");
 
         MvcResult requestResult = mockMvc
                 .perform(request)
