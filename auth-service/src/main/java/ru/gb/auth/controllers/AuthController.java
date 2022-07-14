@@ -1,8 +1,8 @@
 package ru.gb.auth.controllers;
 
-import com.geekbrains.spring.web.api.exceptions.AppError;
 import ru.gb.auth.dto.JwtRequest;
 import ru.gb.auth.dto.JwtResponse;
+import ru.gb.auth.exceptions.AuthError;
 import ru.gb.auth.services.UserService;
 import ru.gb.auth.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class AuthController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(new AppError("AUTH_SERVICE_INCORRECT_USERNAME_OR_PASSWORD", "Incorrect username or password"), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new AuthError("AUTH_SERVICE_INCORRECT_USERNAME_OR_PASSWORD", "Incorrect username or password"), HttpStatus.UNAUTHORIZED);
         }
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
