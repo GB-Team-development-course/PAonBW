@@ -32,4 +32,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findFirstByAccountTypeOrderByDtCreatedDesc(
             @NonNull final AccountType accountType
     );
+
+    @NonNull
+    Optional<Account> findAccountByAccountNumber(@NonNull final String accountNum);
 }
