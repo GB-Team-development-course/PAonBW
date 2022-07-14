@@ -1,9 +1,9 @@
-INSERT INTO test_schema.clients (id)
-VALUES (1),
-       (2),
-       (3),
-       (4),
-       (5);
+INSERT INTO test_schema.clients (id, username)
+VALUES (1, '1'),
+       (2, '2'),
+       (3, '3'),
+       (4, '4'),
+       (5, '5');
 
 INSERT INTO test_schema.accounts (client_id, account_type_id, account_number, account_status_id,
                       currency_id, dt_created, dt_blocked, dt_closed)
