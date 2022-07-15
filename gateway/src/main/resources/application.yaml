@@ -7,10 +7,11 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "http://localhost:8190"
+            allowedOrigins: "*"
             allowedMethods:
               - GET
               - POST
+              - PUT
             allowedHeaders: "*"
       routes:
         - id: core-service
@@ -20,3 +21,12 @@ spring:
           filters:
             - StripPrefix=1
             - PrefixPath=/
+            - JwtAuthFilter
+        - id: auth-service
+          uri: http://auth-service:9098/
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/web-market-auth
+            - JwtAuthFilter

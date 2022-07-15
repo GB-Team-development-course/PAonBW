@@ -15,7 +15,7 @@ public class Balance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "balance_gen")
-    @SequenceGenerator(name = "balance_gen", sequenceName = "balance_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "balance_gen", sequenceName = "balances_id_seq", allocationSize = 1)
     private Long id;
 
     /**
@@ -38,6 +38,13 @@ public class Balance {
     @NonNull
     @Column(name = "debit_balance")
     private BigDecimal debitBalance = BigDecimal.ZERO;
+
+    /**
+     * Актуальная задолженность
+     */
+    @NonNull
+    @Column(name = "credit_debt")
+    private BigDecimal creditDebt = BigDecimal.ZERO;
 
     /**
      * Дата и время последнего обновления информации по счету

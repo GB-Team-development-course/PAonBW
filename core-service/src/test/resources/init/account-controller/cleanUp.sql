@@ -1,0 +1,1 @@
+TRUNCATE TABLE test_schema.clients, test_schema.accounts, test_schema.balances RESTART IDENTITY CASCADE;
