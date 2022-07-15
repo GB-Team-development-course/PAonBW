@@ -1,0 +1,36 @@
+jwt:
+  lifetime: 36000000
+  secret: testSecret
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5435/postgres
+    username: postgres
+    password: postgres
+  jpa:
+    open-in-view: false
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: test_schema
+
+postgres:
+  image: postgres:13.2
+  database:
+    name: postgres_test_db
+  username: postgres
+  password: postgres
+  init:
+    script:
+      path: init/init_schema.sql
+
+liquibase:
+  default:
+    schema: ${spring.datasource.hikari.schema}
+  master:
+    changelog:
+      path: db/changelog/db.changelog-master.yaml
