@@ -1,13 +1,6 @@
-jwt:
-  lifetime: 36000000
-  secret: testSecret
-
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5435/postgres
-    username: postgres
-    password: postgres
   jpa:
     open-in-view: false
     generate-ddl: false
@@ -30,7 +23,11 @@ postgres:
 
 liquibase:
   default:
-    schema: ${spring.datasource.hikari.schema}
+    schema: test_schema
   master:
     changelog:
       path: db/changelog/db.changelog-master.yaml
+
+jwt:
+  lifetime: 3600000
+  secret: testSecret
