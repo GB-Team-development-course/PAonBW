@@ -2,7 +2,6 @@ package ru.gb.auth.controllers;
 
 import ru.gb.auth.dto.JwtRequest;
 import ru.gb.auth.dto.JwtResponse;
-import ru.gb.auth.exceptions.AuthError;
 import ru.gb.auth.services.UserService;
 import ru.gb.auth.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +27,9 @@ public class AuthController {
     @PostMapping("/auth")
     public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest) {
         log.info("Старт auth {}", authRequest);
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-        } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(new AuthError("AUTH_SERVICE_INCORRECT_USERNAME_OR_PASSWORD", "Incorrect username or password"), HttpStatus.UNAUTHORIZED);
-        }
+
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));

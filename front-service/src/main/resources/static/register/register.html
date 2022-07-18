@@ -1,0 +1,27 @@
+<div>
+    <h2>Регистрация нового пользователя</h2>
+    <form class="align-middle" ng-submit="tryToRegisterUserAccount()">
+        <div class="input-group input-group-sm" style="padding: 4px;">
+            <input id="navLoginField" class="form-control" ng-model="user.username" type="text"
+                   aria-describedby="inputGroup-sizing-sm" style="margin-left: 10px;">
+            <label for="navLoginField">Имя пользователя</label>
+
+            <input id="navEmailField" class="form-control" ng-model="user.email" type="email"
+                   aria-describedby="inputGroup-sizing-sm" style="margin-left: 10px;">
+            <label for="navEmailField">Email пользователя</label>
+
+            <input id="navPasswordField" class="form-control" ng-model="user.password" type="password"
+                   aria-describedby="inputGroup-sizing-sm" style="margin-left: 10px;">
+            <label for="navPasswordField">Паспорт пользователя</label>
+
+            <input id="navMatchingPasswordField" class="form-control" ng-model="user.matchingPassword" type="password"
+                   aria-describedby="inputGroup-sizing-sm" style="margin-left: 10px;">
+            <label for="navMatchingPasswordField">Повторить паспорт пользователя</label>
+
+
+            <button id="navLoginSubmit" class="btn btn-outline-warning btn-sm"
+                    style="margin-left: 10px;" type="submit">Зарегистрировать
+            </button>
+        </div>
+    </form>
+</div>
