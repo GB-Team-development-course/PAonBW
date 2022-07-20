@@ -16,4 +16,12 @@ public class ClientService {
         return repository.findByUsername(username);
     }
 
+    public Client createNewClient(String username) {
+        return repository.save(new Client(null, username));
+    }
+
+    public void deleteByUsername(String username) {
+        repository.deleteByUsername(username);
+    }
+
 }
