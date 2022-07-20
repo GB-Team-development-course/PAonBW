@@ -24,9 +24,43 @@
                     <td>{{a.dtCreated}}</td>
                     <td>{{a.dtBlocked}}</td>
                     <td>{{a.dtClosed}}</td>
+                    <td>
+                    <button class="btn btn-secondary" ng-click="blockAccount(a.accountNumber)">Заблокировать счёт</button>
+                    </td>
+                    <td>
+                    <button class="btn btn-secondary" ng-click="closeAccount(a.accountNumber)">Закрыть счёт</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <p>Оформить кредит</p>
+        <form novalidate ng-submit="createCreditAccount()">
+            <div class="form-floating input-group-sm">
+                <input type="text" class="form-control"  id="creditCurrency" placeholder="Валюта кредита" ng-model="creditInfo.currency">
+                <label for="creditCurrency">Валюта кредита</label>
+            </div>
+            <p></p>
+            <div class="form-floating input-group-sm">
+                <input type="text" class="form-control"  id="creditSum" placeholder="Сумма кредита" ng-model="creditInfo.credit">
+                <label for="creditSum">Сумма кредита</label>
+            </div>
+            <p></p>
+            <button class="btn btn-outline-warning btn-sm" style="width: 100%;" type="submit">Оформить кредит</button>
+        </form>
+    </div>
+    <p></p>
+    <div class="col-6 col-md-2">
+        <p>Оформить депозит</p>
+        <form novalidate ng-submit="createDebitAccount()">
+            <div class="form-floating input-group-sm">
+                <input type="text" class="form-control"  id="debitCurrency" placeholder="Валюта депозита" ng-model="debitInfo.currency">
+                <label for="debitCurrency">Валюта</label>
+            </div>
+            <p></p>
+            <button class="btn btn-outline-warning btn-sm" style="width: 100%;" type="submit">Оформить депозит</button>
+        </form>
     </div>
 </div>

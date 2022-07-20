@@ -33,18 +33,18 @@ public class AccountController {
 
     @Operation(summary = "Запрос на получение счёта по номеру", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = AccountDto.class)))})
     @GetMapping("/{accountNum}")
-    public AccountDto findByAccountNumber(@RequestHeader Long clientId,
+    public AccountDto findByAccountNumber(@RequestHeader String username,
                                           @PathVariable @Parameter(description = "Номер счёта", required = true) String accountNum) {
         //todo дописать exceptions, пока тут будет заглушка
         return accountConverter.entityToDto(accountService
-                .findByClientIdAndAccountNumber(clientId, accountNum)
+                .findByClientUsernameAndAccountNumber(username, accountNum)
                 .orElseThrow(() -> new RuntimeException("Счёт не найден")));
     }
 
     @Operation(summary = "Запрос на получение всех счетов", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = List.class)))})
     @GetMapping("/")
-    public List<AccountDto> findAll(@RequestHeader Long clientId) {
-        return accountService.findAll(clientId)
+    public List<AccountDto> findAll(@RequestHeader String username) {
+        return accountService.findAll(username)
                 .stream()
                 .map(accountConverter::entityToDto)
                 .collect(Collectors.toList());
@@ -53,40 +53,42 @@ public class AccountController {
     @Operation(summary = "Запрос на создание кредитного счёта", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200")})
     @PostMapping("/createCredit")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto createCreditAccount(@RequestHeader Long clientId, @RequestBody CreateAccountRequest createCreditAccountDto) {
+    public AccountDto createCreditAccount(@RequestHeader String username, @RequestBody CreateAccountRequest createAccountDto) {
         return accountConverter.entityToDto(
+                //todo добавить возможность выбора продукта
                 accountOperationService
                         .createCreditAccount(
-                                clientId,
-                                Currency.getById(createCreditAccountDto.getCurrency()),
-                                createCreditAccountDto.getCredit()));
+                                username,
+                                Currency.getById(createAccountDto.getCurrency()),
+                                createAccountDto.getCredit()));
     }
 
     @Operation(summary = "Запрос на создание дебетового счёта", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200")})
     @PostMapping("/createDebit")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto createDebitAccount(@RequestHeader Long clientId, @RequestBody CreateAccountRequest createDebitAccountDto) {
+    public AccountDto createDebitAccount(@RequestHeader String username, @RequestBody CreateAccountRequest createAccountDto) {
         return accountConverter.entityToDto(
+                //todo добавить возможность выбора продукта
                 accountOperationService.createDebitAccount(
-                        clientId,
-                        Currency.getById(createDebitAccountDto.getCurrency())));
+                        username,
+                        Currency.getById(createAccountDto.getCurrency())));
     }
 
 
     @PutMapping("/blockAccount/{accountNum}")
     @ResponseStatus(HttpStatus.OK)
-    public AccountDto blockAccount(@RequestHeader Long clientId, @PathVariable String accountNum) {
+    public AccountDto blockAccount(@RequestHeader String username, @PathVariable String accountNum) {
         return accountConverter.entityToDto(accountOperationService
-                .blockAccount(clientId, accountNum)
+                .blockAccount(username, accountNum)
                 //todo дописать exceptions, пока тут будет заглушка
                 .orElseThrow(() -> new RuntimeException("Счёт невозможно заблокировать")));
     }
 
     @PutMapping("/closeAccount/{accountNum}")
     @ResponseStatus(HttpStatus.OK)
-    public AccountDto closeAccount(@RequestHeader Long clientId, @PathVariable String accountNum) {
+    public AccountDto closeAccount(@RequestHeader String username, @PathVariable String accountNum) {
         return accountConverter.entityToDto(accountOperationService
-                .closeAccount(clientId, accountNum)
+                .closeAccount(username, accountNum)
                 //todo дописать exceptions, пока тут будет заглушка
                 .orElseThrow(() -> new RuntimeException("Счёт невозможно закрыть")));
     }

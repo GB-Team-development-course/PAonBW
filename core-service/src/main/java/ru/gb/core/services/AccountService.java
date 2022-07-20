@@ -25,8 +25,8 @@ public class AccountService {
         return accountRepository.findAccountByAccountNumber(accountNum);
     }
 
-    public List<Account> findAll(Long clientId) {
-        return accountRepository.findAllByClientId(clientId);
+    public List<Account> findAll(String username) {
+        return accountRepository.findAllByClientUsername(username);
     }
 
 
