@@ -26,11 +26,11 @@ public class AccountOperationService {
     private final BalanceService balanceService;
 
     @Transactional
-    public Account createCreditAccount(Long clientId, Currency currency, BigDecimal credit) {
+    public Account createCreditAccount(String username, Currency currency, BigDecimal credit) {
 
         Account account = new Account(
                 null,
-                clientService.findById(clientId).get(),
+                clientService.findByUsername(username).get(),
                 AccountType.C,
                 creteAccountNumber(AccountType.C),
                 AccountStatus.ACTIVE,
@@ -48,11 +48,11 @@ public class AccountOperationService {
     }
 
     @Transactional
-    public Account createDebitAccount(Long clientId, Currency currency) {
+    public Account createDebitAccount(String username, Currency currency) {
 
         Account account = new Account(
                 null,
-                clientService.findById(clientId).get(),
+                clientService.findByUsername(username).get(),
                 AccountType.D,
                 creteAccountNumber(AccountType.D),
                 AccountStatus.ACTIVE,
@@ -70,8 +70,8 @@ public class AccountOperationService {
     }
 
     @Transactional
-    public Optional<Account> blockAccount(Long clientId, String accountNum) {
-        Optional<Account> account = accountService.findByClientIdAndAccountNumber(clientId, accountNum);
+    public Optional<Account> blockAccount(String username, String accountNum) {
+        Optional<Account> account = accountService.findByClientUsernameAndAccountNumber(username, accountNum);
         if (account.isPresent()) {
             account.get().setAccountStatus(AccountStatus.BLOCKED);
             account.get().setDtBlocked(LocalDateTime.now());
@@ -82,8 +82,8 @@ public class AccountOperationService {
     }
 
     @Transactional
-    public Optional<Account> closeAccount(Long clientId, String accountNum) {
-        Optional<Account> account = accountService.findByClientIdAndAccountNumber(clientId, accountNum);
+    public Optional<Account> closeAccount(String username, String accountNum) {
+        Optional<Account> account = accountService.findByClientUsernameAndAccountNumber(username, accountNum);
         if (account.isPresent() && checkClosingPossibility(account.get())) {
             account.get().setAccountStatus(AccountStatus.CLOSED);
             account.get().setDtClosed(LocalDateTime.now());
