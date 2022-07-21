@@ -1,12 +1,16 @@
 server:
   port: 9090
 
+my:
+  db:
+    schema-name: test_schema
+
 spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5435/postgres
     hikari:
-      schema: test_schema
+      schema: ${my.db.schema-name}
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -22,4 +26,4 @@ spring:
 
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
-    default-schema: ${spring.datasource.hikari.schema}
+    default-schema: ${my.db.schema-name}
