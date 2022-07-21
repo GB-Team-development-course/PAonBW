@@ -5,17 +5,15 @@ package ru.gb.core.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.gb.core.dto.OrderDtoRequest;
 import ru.gb.core.entities.Account;
 import ru.gb.core.entities.Balance;
 import ru.gb.core.entities.Order;
 import ru.gb.core.enums.AccountType;
 import ru.gb.core.enums.OrderStatus;
+import ru.gb.core.exceptions.ValidationProcessException;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -25,13 +23,11 @@ public class TransferOperationService {
     private final AccountService accountService;
     private final BalanceService balanceService;
 
-    public Order doTransferByOrder(Order order) {
-        Account accountSource = accountService.findByAccountNumber(order.getSourceAccount()).get();
-        Account accountTarget = accountService.findByAccountNumber(order.getTargetAccount()).get();
-        order.setSourceAccount(accountSource.getAccountNumber());
-        order.setTargetAccount(accountTarget.getAccountNumber());
+    public Order doTransferByOrder(Account sourceAccount, Account targetAccount, Order order) {
+        order.setSourceAccount(sourceAccount.getAccountNumber());
+        order.setTargetAccount(targetAccount.getAccountNumber());
 
-        doTransferFromBalanceToTargetBalance(accountSource, accountTarget, order.getAmount());
+        doTransferFromBalanceToTargetBalance(sourceAccount, targetAccount, order.getAmount());
 
         order.setOrderStatus(OrderStatus.SUCCESS);
         order.setExecutionEnd(LocalDateTime.now());
@@ -39,8 +35,10 @@ public class TransferOperationService {
     }
 
     private void doTransferFromBalanceToTargetBalance(Account accountSource, Account accountTarget, BigDecimal valueTransfer) {
-        Balance balanceSource = balanceService.findByAccountId(accountSource.getId()).get();
-        Balance balanceTarget = balanceService.findByAccountId(accountTarget.getId()).get();
+        Balance balanceSource = balanceService.findByAccountId(accountSource.getId())
+                .orElseThrow(() -> new ValidationProcessException("Баланс не найден"));
+        Balance balanceTarget = balanceService.findByAccountId(accountTarget.getId())
+                .orElseThrow(() -> new ValidationProcessException("Баланс не найден"));
 
         if (accountSource.getAccountType().compareTo(AccountType.C) == 0) {
             balanceSource.setCreditBalance(balanceSource.getCreditBalance().subtract(valueTransfer));

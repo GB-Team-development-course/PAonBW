@@ -17,11 +17,11 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
-    public Optional<Account> findByClientIdAndAccountNumber(Long clientId,String accountNum) {
-        return accountRepository.findByClientIdAccountByAccountNumber(clientId,accountNum);
+    public Optional<Account> findByClientUsernameAndAccountNumber(String username, String accountNum) {
+        return accountRepository.findByClientUsernameAccountByAccountNumber(username, accountNum);
     }
 
-    public Optional<Account> findByAccountNumber(String accountNum){
+    public Optional<Account> findByAccountNumber(String accountNum) {
         return accountRepository.findAccountByAccountNumber(accountNum);
     }
 

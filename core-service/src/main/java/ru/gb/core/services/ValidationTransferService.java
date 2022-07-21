@@ -5,88 +5,84 @@ package ru.gb.core.services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.gb.core.converters.OrderConverter;
 import ru.gb.core.dto.OrderDtoRequest;
+import ru.gb.core.dto.OrderDtoResponse;
 import ru.gb.core.entities.Account;
 import ru.gb.core.entities.Balance;
 import ru.gb.core.entities.Order;
 import ru.gb.core.enums.AccountType;
-import ru.gb.core.enums.Currency;
-import ru.gb.core.enums.OrderStatus;
+import ru.gb.core.enums.ResponseCode;
 import ru.gb.core.enums.TransferDirection;
+import ru.gb.core.exceptions.ValidationProcessException;
+import ru.gb.core.response.Response;
+import ru.gb.core.response.ResponseFactory;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class ValidationTransferService {
-    private final OrderService orderService;
     private final AccountService accountService;
     private final BalanceService balanceService;
     private final TransferOperationService transferOperationService;
+    private final OrderConverter orderConverter;
 
+    @Transactional
+    public Response<OrderDtoResponse> validateTransfer(String username, OrderDtoRequest orderDtoRequest) {
+        try {
+            Account sourceAccount = accountService.findByClientUsernameAndAccountNumber(
+                    username, orderDtoRequest.getSourceAccount()).orElseThrow(
+                    () -> new ValidationProcessException("Аккаунт не найден!")
+            );
 
-    public Order validateTransfer(OrderDtoRequest orderDtoRequest) {
-        Order order = new Order();
-        order.setExternalOrderGuid(UUID.randomUUID());
-        order.setExecutionStart(LocalDateTime.now());
-        order.setCurrency(Currency.USD);
-        order.setTransferDirection(TransferDirection.D_TO_D); //TODO findTransferDirection
-        order.setPaymentPurpose("TEST");
+            Account targetAccount = accountService.findByAccountNumber(
+                    orderDtoRequest.getTargetAccount()).orElseThrow(
+                    () -> new ValidationProcessException("Аккаунт адресант не найден!")
+            );
 
-        return doValidation(order, orderDtoRequest);
-    }
+            if (sourceAccount.getAccountNumber().equals(targetAccount.getAccountNumber())) {
+                throw new ValidationProcessException("Перевод доступен только на другой счет!");
+            }
 
-    private Order doValidation(Order order, OrderDtoRequest orderDtoRequest) {
-        List<String> validationErrors = new ArrayList<>();
-        Optional<Account> account = accountService.findByAccountNumber(orderDtoRequest.getSourceAccount());
+            if (!doValidationOfAccountBalanceByAccount(sourceAccount, orderDtoRequest.getAmount())) {
+                throw new ValidationProcessException("Баланс меньше суммы перевода!");
+            }
 
-        //Валидация аккаунта отправителя
-        if (account.isEmpty()) {
-            validationErrors.add(String.format("SWW"));
-            order.setAdditionalInformation(validationErrors.toString());
-            order.setOrderStatus(OrderStatus.ERROR);
-            return orderService.save(order);
-        } else {
-            order.setSourceAccount(account.get().getAccountNumber());
-        }
-
-        //Валидация наличия баланса
-        if (!doValidationOfAccountBalanceByAccount(account.get(), orderDtoRequest.getAmount())) {
-            validationErrors.add("SWW");
-            order.setAdditionalInformation(validationErrors.toString());
-            order.setOrderStatus(OrderStatus.ERROR);
-            return orderService.save(order);
-        } else {
+            Order order = new Order();
+            order.setSourceAccount(sourceAccount.getAccountNumber());
+            order.setTargetAccount(targetAccount.getAccountNumber());
+            order.setExternalOrderGuid(UUID.randomUUID());
+            order.setExecutionStart(LocalDateTime.now());
+            order.setCurrency(orderDtoRequest.getCurrency());
+            order.setTransferDirection(TransferDirection.D_TO_D); //TODO findTransferDirection
+            order.setPaymentPurpose(orderDtoRequest.getPaymentPurpose());
             order.setAmount(orderDtoRequest.getAmount());
+
+            return ResponseFactory.successResponse(ResponseCode.OPERATION_COMPLETE,
+                    orderConverter.entityToDto(
+                            transferOperationService.doTransferByOrder(sourceAccount, targetAccount, order))
+            );
+        } catch (Exception e) {
+            return ResponseFactory.errorResponse(ResponseCode.ACCOUNT_VALIDATION_ERROR, e.getMessage());
         }
-
-        account = accountService.findByAccountNumber(orderDtoRequest.getTargetAccount());
-
-        //Валидация аккаунта получателя
-        if (account.isEmpty()) {
-            validationErrors.add(String.format("SWW"));
-            order.setAdditionalInformation(validationErrors.toString());
-            order.setOrderStatus(OrderStatus.ERROR);
-            return orderService.save(order);
-        } else {
-            order.setTargetAccount(account.get().getAccountNumber());
-        }
-
-        return transferOperationService.doTransferByOrder(order);
     }
+
+    //TODO checkAccountIsBlocked and checkAccountIsClosed
 
     //Метод валидации баланса
-    private Boolean doValidationOfAccountBalanceByAccount(Account account, BigDecimal valueTransfer) {
-        Optional<Balance> balance = balanceService.findByAccountId(account.getId());
-        return account.getAccountType().compareTo(AccountType.C) == 0 ?
-                balance.get().getCreditBalance().add(balance.get().getCreditDebt()).compareTo(valueTransfer) > 0
-                : balanceService.findByAccountId(account.getId()).get().getDebitBalance().compareTo(valueTransfer) > 0;
+    private boolean doValidationOfAccountBalanceByAccount(Account account, BigDecimal valueTransfer) {
+        Balance balance = balanceService.findByAccountId(account.getId()).orElseThrow(
+                () -> new ValidationProcessException("Ошибка баланса!")
+        );
+
+        if (account.getAccountType().compareTo(AccountType.C) == 0) {
+            return balance.getCreditBalance().add(balance.getCreditDebt()).compareTo(valueTransfer) >= 0;
+        } else {
+            return balance.getDebitBalance().compareTo(valueTransfer) >= 0;
+        }
     }
-
-
 }
