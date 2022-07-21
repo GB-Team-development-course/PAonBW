@@ -29,7 +29,6 @@ public class AccountService {
         return accountRepository.findAllByClientUsername(username);
     }
 
-
     @NonNull
     public Optional<Account> findLastCreatedAccountByType(@NonNull final AccountType accountType) {
         return accountRepository.findFirstByAccountTypeOrderByDtCreatedDesc(accountType);
