@@ -7,26 +7,29 @@ angular.module('gbank-front').controller('personalController', function ($scope,
             url: contextPath + 'api/v1/account/',
             method: 'GET'})
             .then(function (response) {
-            console.log(response.data)
-            $scope.AccountsPage = response.data;
+            console.log(response.data.data)
+            $scope.AccountsPage = response.data.data;
         });
     };
     $scope.blockAccount = function (accountNumber) {
-        $http.put(contextPath + 'api/v1/account/blockAccount/' + accountNumber)
+        $http.put(contextPath + 'api/v1/account/block/' + accountNumber)
             .then(function (response) {
                 $scope.loadAccounts();
             });
     }
     $scope.closeAccount = function (accountNumber) {
-        $http.put(contextPath + 'api/v1/account/closeAccount/' + accountNumber)
+        $http.put(contextPath + 'api/v1/account/close/' + accountNumber)
             .then(function (response) {
+                if (response.data.code===204){
+                    alert("Счёт невозможно закрыть")
+                }
                 $scope.loadAccounts();
             });
     }
 
     $scope.createCreditAccount = function () {
         $http({
-            url: contextPath + 'api/v1/account/createCredit',
+            url: contextPath + 'api/v1/account/credit',
             method: 'POST',
             data: $scope.creditInfo
         }).then(function (response) {
@@ -36,7 +39,7 @@ angular.module('gbank-front').controller('personalController', function ($scope,
     };
     $scope.createDebitAccount = function () {
         $http({
-            url: contextPath + 'api/v1/account/createDebit',
+            url: contextPath + 'api/v1/account/debit',
             method: 'POST',
             data: $scope.debitInfo
         }).then(function (response) {
