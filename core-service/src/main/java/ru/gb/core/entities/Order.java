@@ -35,7 +35,6 @@ public class Order {
      */
     @NonNull
     @Column(name = "external_order_guid")
-    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID externalOrderGuid;
 
     /**
@@ -63,6 +62,7 @@ public class Order {
      * Сумма
      */
     @NonNull
+    @Column(name = "amount")
     private BigDecimal amount;
 
     /**
