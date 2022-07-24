@@ -9,87 +9,67 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.gb.core.converters.AccountConverter;
 import ru.gb.core.dto.AccountDto;
 import ru.gb.core.dto.CreateAccountRequest;
 import ru.gb.core.enums.Currency;
-import ru.gb.core.services.AccountService;
+import ru.gb.core.response.Response;
 import ru.gb.core.services.AccountOperationService;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/account")
 @AllArgsConstructor
 @Tag(name = "Счета", description = "Методы работы со счетами")
 public class AccountController {
-
-    //todo необходимо разработать класс с ответами на запросы
-
-    private final AccountService accountService;
-    private final AccountConverter accountConverter;
     private final AccountOperationService accountOperationService;
 
     @Operation(summary = "Запрос на получение счёта по номеру", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = AccountDto.class)))})
     @GetMapping("/{accountNum}")
-    public AccountDto findByAccountNumber(@RequestHeader String username,
-                                          @PathVariable @Parameter(description = "Номер счёта", required = true) String accountNum) {
-        //todo дописать exceptions, пока тут будет заглушка
-        return accountConverter.entityToDto(accountService
-                .findByClientUsernameAndAccountNumber(username, accountNum)
-                .orElseThrow(() -> new RuntimeException("Счёт не найден")));
+    public Response<AccountDto> findByAccountNumber(@RequestHeader String username,
+                                          @PathVariable @Parameter(description = "Номер счёта", required = true)
+                                          String accountNum) {
+        return  accountOperationService.findByClientUsernameAndAccountNumber(username, accountNum);
     }
 
     @Operation(summary = "Запрос на получение всех счетов", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = List.class)))})
     @GetMapping("/")
-    public List<AccountDto> findAll(@RequestHeader String username) {
-        return accountService.findAll(username)
-                .stream()
-                .map(accountConverter::entityToDto)
-                .collect(Collectors.toList());
+    public Response<List<AccountDto>> findAll(@RequestHeader String username) {
+        return accountOperationService.findAll(username);
     }
 
     @Operation(summary = "Запрос на создание кредитного счёта", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200")})
-    @PostMapping("/createCredit")
+    @PostMapping("/credit")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto createCreditAccount(@RequestHeader String username, @RequestBody CreateAccountRequest createAccountDto) {
-        return accountConverter.entityToDto(
-                //todo добавить возможность выбора продукта
-                accountOperationService
+    public Response<AccountDto> createCreditAccount(@RequestHeader String username, @RequestBody CreateAccountRequest createAccountDto) {
+        //todo добавить возможность выбора продукта
+        return accountOperationService
                         .createCreditAccount(
                                 username,
                                 Currency.getById(createAccountDto.getCurrency()),
-                                createAccountDto.getCredit()));
+                                createAccountDto.getCredit());
     }
 
     @Operation(summary = "Запрос на создание дебетового счёта", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200")})
-    @PostMapping("/createDebit")
+    @PostMapping("/debit")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDto createDebitAccount(@RequestHeader String username, @RequestBody CreateAccountRequest createAccountDto) {
-        return accountConverter.entityToDto(
-                //todo добавить возможность выбора продукта
-                accountOperationService.createDebitAccount(
+    public Response<AccountDto> createDebitAccount(@RequestHeader String username, @RequestBody CreateAccountRequest createAccountDto) {
+        //todo добавить возможность выбора продукта
+        return accountOperationService.createDebitAccount(
                         username,
-                        Currency.getById(createAccountDto.getCurrency())));
+                        Currency.getById(createAccountDto.getCurrency()));
     }
 
 
-    @PutMapping("/blockAccount/{accountNum}")
+    @PutMapping("/block/{accountNum}")
     @ResponseStatus(HttpStatus.OK)
-    public AccountDto blockAccount(@RequestHeader String username, @PathVariable String accountNum) {
-        return accountConverter.entityToDto(accountOperationService
-                .blockAccount(username, accountNum)
-                //todo дописать exceptions, пока тут будет заглушка
-                .orElseThrow(() -> new RuntimeException("Счёт невозможно заблокировать")));
+    public Response<AccountDto> blockAccount(@RequestHeader String username, @PathVariable String accountNum) {
+        return accountOperationService.blockAccount(username, accountNum);
+
     }
 
-    @PutMapping("/closeAccount/{accountNum}")
+    @PutMapping("/close/{accountNum}")
     @ResponseStatus(HttpStatus.OK)
-    public AccountDto closeAccount(@RequestHeader String username, @PathVariable String accountNum) {
-        return accountConverter.entityToDto(accountOperationService
-                .closeAccount(username, accountNum)
-                //todo дописать exceptions, пока тут будет заглушка
-                .orElseThrow(() -> new RuntimeException("Счёт невозможно закрыть")));
+    public Response<AccountDto> closeAccount(@RequestHeader String username, @PathVariable String accountNum) {
+        return accountOperationService.closeAccount(username, accountNum);
     }
 }

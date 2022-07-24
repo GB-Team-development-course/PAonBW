@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.junit.Ignore;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.gb.core.dto.*;
 import ru.gb.core.enums.AccountStatus;
 import ru.gb.core.enums.AccountType;
-import ru.gb.core.enums.Currency;;
+import ru.gb.core.enums.Currency;
+import ru.gb.core.response.Response;;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -81,8 +83,8 @@ public class AccountControllerIntegrationTest {
         );
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post(URL_COMMON + "/createDebit")
-                .header("username","John")
+                .post(URL_COMMON + "/debit")
+                .header("username", "John")
                 .content(objectMapper.writeValueAsString(accountRequest))
                 .contentType(MediaType.APPLICATION_JSON_VALUE);
 
@@ -92,21 +94,23 @@ public class AccountControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andReturn();
 
-        AccountDto objectResponse = objectMapper.readValue(
+        Response<AccountDto> objectResponse = objectMapper.readValue(
                 requestResult.getResponse().getContentAsString(),
                 new TypeReference<>() {
                 }
         );
 
-        Assertions.assertEquals(objectResponse.getAccountType(),AccountType.D);
-        Assertions.assertEquals(objectResponse.getAccountNumber(),"D000000004");
-        Assertions.assertEquals(objectResponse.getAccountStatus(),AccountStatus.ACTIVE);
-        Assertions.assertEquals(objectResponse.getCurrency(), Currency.USD);
-        Assertions.assertNotNull(objectResponse.getDtCreated());
-        Assertions.assertNull(objectResponse.getDtBlocked());
-        Assertions.assertNull(objectResponse.getDtClosed());
-
+        Assertions.assertEquals(objectResponse.getCode(), 200);
+        Assertions.assertTrue(objectResponse.isSuccess());
+        Assertions.assertEquals(objectResponse.getData().getAccountType(), AccountType.D);
+        Assertions.assertEquals(objectResponse.getData().getAccountNumber(), "D000000004");
+        Assertions.assertEquals(objectResponse.getData().getAccountStatus(), AccountStatus.ACTIVE);
+        Assertions.assertEquals(objectResponse.getData().getCurrency(), Currency.USD);
+        Assertions.assertNotNull(objectResponse.getData().getDtCreated());
+        Assertions.assertNull(objectResponse.getData().getDtBlocked());
+        Assertions.assertNull(objectResponse.getData().getDtClosed());
     }
+
     /**
      * Тест: создание кредитного счета
      *
@@ -120,8 +124,8 @@ public class AccountControllerIntegrationTest {
         );
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post(URL_COMMON + "/createCredit")
-                .header("username","Jack")
+                .post(URL_COMMON + "/credit")
+                .header("username", "Jack")
                 .content(objectMapper.writeValueAsString(accountRequest))
                 .contentType(MediaType.APPLICATION_JSON_VALUE);
 
@@ -131,19 +135,21 @@ public class AccountControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andReturn();
 
-        AccountDto objectResponse = objectMapper.readValue(
+        Response<AccountDto> objectResponse = objectMapper.readValue(
                 requestResult.getResponse().getContentAsString(),
                 new TypeReference<>() {
                 }
         );
 
-        Assertions.assertEquals(objectResponse.getAccountType(),AccountType.C);
-        Assertions.assertEquals(objectResponse.getAccountNumber(),"C000000005");
-        Assertions.assertEquals(objectResponse.getAccountStatus(),AccountStatus.ACTIVE);
-        Assertions.assertEquals(objectResponse.getCurrency(), Currency.USD);
-        Assertions.assertNotNull(objectResponse.getDtCreated());
-        Assertions.assertNull(objectResponse.getDtBlocked());
-        Assertions.assertNull(objectResponse.getDtClosed());
+        Assertions.assertEquals(objectResponse.getCode(), 200);
+        Assertions.assertTrue(objectResponse.isSuccess());
+        Assertions.assertEquals(objectResponse.getData().getAccountType(), AccountType.C);
+        Assertions.assertEquals(objectResponse.getData().getAccountNumber(), "C000000005");
+        Assertions.assertEquals(objectResponse.getData().getAccountStatus(), AccountStatus.ACTIVE);
+        Assertions.assertEquals(objectResponse.getData().getCurrency(), Currency.USD);
+        Assertions.assertNotNull(objectResponse.getData().getDtCreated());
+        Assertions.assertNull(objectResponse.getData().getDtBlocked());
+        Assertions.assertNull(objectResponse.getData().getDtClosed());
 
     }
 
@@ -158,7 +164,7 @@ public class AccountControllerIntegrationTest {
         String blockingAccount = "C000000001";
 
         RequestBuilder request = MockMvcRequestBuilders
-                .put(URL_COMMON + "/blockAccount/" + blockingAccount)
+                .put(URL_COMMON + "/block/" + blockingAccount)
                 .header("username", "John");
 
         MvcResult requestResult = mockMvc
@@ -167,19 +173,21 @@ public class AccountControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
-        AccountDto objectResponse = objectMapper.readValue(
+        Response<AccountDto> objectResponse = objectMapper.readValue(
                 requestResult.getResponse().getContentAsString(),
                 new TypeReference<>() {
                 }
         );
 
-        Assertions.assertEquals(objectResponse.getAccountType(),AccountType.C);
-        Assertions.assertEquals(objectResponse.getAccountNumber(),"C000000001");
-        Assertions.assertEquals(objectResponse.getAccountStatus(),AccountStatus.BLOCKED);
-        Assertions.assertEquals(objectResponse.getCurrency(), Currency.USD);
-        Assertions.assertNotNull(objectResponse.getDtCreated());
-        Assertions.assertNotNull(objectResponse.getDtBlocked());
-        Assertions.assertNull(objectResponse.getDtClosed());
+        Assertions.assertEquals(objectResponse.getCode(), 200);
+        Assertions.assertTrue(objectResponse.isSuccess());
+        Assertions.assertEquals(objectResponse.getData().getAccountType(), AccountType.C);
+        Assertions.assertEquals(objectResponse.getData().getAccountNumber(), "C000000001");
+        Assertions.assertEquals(objectResponse.getData().getAccountStatus(), AccountStatus.BLOCKED);
+        Assertions.assertEquals(objectResponse.getData().getCurrency(), Currency.USD);
+        Assertions.assertNotNull(objectResponse.getData().getDtCreated());
+        Assertions.assertNotNull(objectResponse.getData().getDtBlocked());
+        Assertions.assertNull(objectResponse.getData().getDtClosed());
 
     }
 
@@ -194,7 +202,7 @@ public class AccountControllerIntegrationTest {
         String closingAccount = "D000000003";
 
         RequestBuilder request = MockMvcRequestBuilders
-                .put(URL_COMMON + "/closeAccount/" + closingAccount)
+                .put(URL_COMMON + "/close/" + closingAccount)
                 .header("username", "Bob");
 
         MvcResult requestResult = mockMvc
@@ -203,19 +211,20 @@ public class AccountControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
-        AccountDto objectResponse = objectMapper.readValue(
+        Response<AccountDto> objectResponse = objectMapper.readValue(
                 requestResult.getResponse().getContentAsString(),
                 new TypeReference<>() {
                 }
         );
 
-        Assertions.assertEquals(objectResponse.getAccountType(),AccountType.D);
-        Assertions.assertEquals(objectResponse.getAccountNumber(),"D000000003");
-        Assertions.assertEquals(objectResponse.getAccountStatus(),AccountStatus.CLOSED);
-        Assertions.assertEquals(objectResponse.getCurrency(), Currency.USD);
-        Assertions.assertNotNull(objectResponse.getDtCreated());
-        Assertions.assertNull(objectResponse.getDtBlocked());
-        Assertions.assertNotNull(objectResponse.getDtClosed());
-
+        Assertions.assertEquals(objectResponse.getCode(), 200);
+        Assertions.assertTrue(objectResponse.isSuccess());
+        Assertions.assertEquals(objectResponse.getData().getAccountType(), AccountType.D);
+        Assertions.assertEquals(objectResponse.getData().getAccountNumber(), "D000000003");
+        Assertions.assertEquals(objectResponse.getData().getAccountStatus(), AccountStatus.CLOSED);
+        Assertions.assertEquals(objectResponse.getData().getCurrency(), Currency.USD);
+        Assertions.assertNotNull(objectResponse.getData().getDtCreated());
+        Assertions.assertNull(objectResponse.getData().getDtBlocked());
+        Assertions.assertNotNull(objectResponse.getData().getDtClosed());
     }
 }

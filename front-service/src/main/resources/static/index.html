@@ -24,6 +24,9 @@
                     <a class="nav-link" href="#!/personal">Личный кабинет</a>
                 </li>
                 <li class="nav-item" ng-show="!isUserLoggedIn()">
+                    <a class="nav-link" href="#!/register">Регистрация нового пользователя</a>
+                </li>
+                <li class="nav-item" ng-show="!isUserLoggedIn()">
                     <form class="align-middle" ng-submit="tryToAuth()">
                         <div class="input-group input-group-sm" style="padding: 4px;">
                             <input id="navLoginField" class="form-control" ng-model="user.username" type="text"
@@ -47,7 +50,9 @@
     <ng-view></ng-view>
         <script src="index.js"></script>
         <script src="personal/personal.js"></script>
+        <script src="register/register.js"></script>
         <script src="welcome/welcome.js"></script>
+
 </div>
 
 </body>

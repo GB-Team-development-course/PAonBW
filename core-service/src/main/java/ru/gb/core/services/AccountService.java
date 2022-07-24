@@ -17,14 +17,17 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
 
-    public Optional<Account> findByClientUsernameAndAccountNumber(String username,String accountNum) {
-        return accountRepository.findByClientUsernameAccountByAccountNumber(username,accountNum);
+    public Optional<Account> findByClientUsernameAndAccountNumber(String username, String accountNum) {
+        return accountRepository.findByClientUsernameAccountByAccountNumber(username, accountNum);
+    }
+
+    public Optional<Account> findByAccountNumber(String accountNum) {
+        return accountRepository.findAccountByAccountNumber(accountNum);
     }
 
     public List<Account> findAll(String username) {
         return accountRepository.findAllByClientUsername(username);
     }
-
 
     @NonNull
     public Optional<Account> findLastCreatedAccountByType(@NonNull final AccountType accountType) {

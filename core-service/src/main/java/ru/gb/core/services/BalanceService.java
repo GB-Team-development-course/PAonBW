@@ -19,4 +19,8 @@ public class BalanceService {
     public Optional<Balance> findByAccountId(Long accountId) {
         return balanceRepository.findByAccountId(accountId);
     }
+
+    public Balance save(Balance balance) {
+        return balanceRepository.save(balance);
+    }
 }

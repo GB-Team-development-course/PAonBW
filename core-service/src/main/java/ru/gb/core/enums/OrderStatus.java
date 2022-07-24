@@ -19,11 +19,11 @@ import java.util.stream.Stream;
 public enum OrderStatus {
 
     IN_PROGRESS(1, "В исполнении"),
-    REJECTED(2, "Отказ"),
+    REJECTED(2, "Отказ"), //Ошибка со строны Клиента
     SUCCESS(3, "Успешно"),
-    ERROR(4, "Ошибка");
+    ERROR(4, "Ошибка"); // Ошибка со стороны сервиса
 
-    private final static Map<Integer, OrderStatus> LOOKUP_BY_ID = Stream
+    private static final Map<Integer, OrderStatus> LOOKUP_BY_ID = Stream
             .of(OrderStatus.values())
             .collect(Collectors.toMap(OrderStatus::getId, Function.identity()));
 
