@@ -19,6 +19,7 @@ import ru.gb.core.response.ResponseFactory;
 import ru.gb.core.util.AccountUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -173,5 +174,11 @@ public class AccountOperationService {
                 && balance.get().getCreditBalance().compareTo(BigDecimal.ZERO) == 0
                 && balance.get().getDebitBalance().compareTo(BigDecimal.ZERO) == 0
                 && balance.get().getCreditDebt().compareTo(BigDecimal.ZERO) == 0;
+    }
+
+    public List<AccountDto> findAllDebitActiveByDate(LocalDate currentDate) {
+        return accountService.findAllDebitActiveByDate(currentDate)
+                .stream()
+                .map(accountConverter::entityToDto).toList();
     }
 }

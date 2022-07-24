@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.gb.core.dto.AccountDto;
@@ -14,6 +15,8 @@ import ru.gb.core.dto.CreateAccountRequest;
 import ru.gb.core.enums.Currency;
 import ru.gb.core.response.Response;
 import ru.gb.core.services.AccountOperationService;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -22,6 +25,12 @@ import java.util.List;
 @Tag(name = "Счета", description = "Методы работы со счетами")
 public class AccountController {
     private final AccountOperationService accountOperationService;
+
+    @GetMapping("/activeDebit/{currentDate}")
+    public List<AccountDto> findByDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate currentDate) {
+        return accountOperationService.findAllDebitActiveByDate(currentDate);
+    }
+
 
     @Operation(summary = "Запрос на получение счёта по номеру", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = AccountDto.class)))})
     @GetMapping("/{accountNum}")

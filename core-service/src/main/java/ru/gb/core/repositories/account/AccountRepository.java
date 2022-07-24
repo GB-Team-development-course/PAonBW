@@ -4,10 +4,10 @@ import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.w3c.dom.stylesheets.LinkStyle;
 import ru.gb.core.entities.Account;
 import ru.gb.core.enums.AccountType;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,4 +35,13 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @NonNull
     Optional<Account> findAccountByAccountNumber(@NonNull final String accountNum);
+
+    @Query("""
+            SELECT a FROM Account a
+            WHERE 
+            (a.dtBlocked < ?1 OR a.dtBlocked IS NULL) 
+            AND (a.dtClosed < ?1 OR a.dtClosed IS NULL) 
+            AND a.accountType = ?2
+            """)
+    List<Account> findAllDebitActiveByDate(@NonNull final LocalDateTime currentDate, @NonNull final AccountType accountType);
 }

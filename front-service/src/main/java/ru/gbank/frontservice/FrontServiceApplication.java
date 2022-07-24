@@ -1,4 +1,4 @@
-package com.geekbrains.frontservice;
+package ru.gbank.frontservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

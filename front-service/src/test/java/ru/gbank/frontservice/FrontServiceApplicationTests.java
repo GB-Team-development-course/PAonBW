@@ -1,4 +1,4 @@
-package com.geekbrains.frontservice;
+package ru.gbank.frontservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
