@@ -52,6 +52,7 @@ public class AccountControllerIntegrationTest {
     @BeforeAll
     public static void initDb(@Autowired final DataSource dataSource) {
         try (final Connection connection = dataSource.getConnection()) {
+            ScriptUtils.executeSqlScript(connection, new ClassPathResource(CLEAN_UP_SQL_PATH));
             ScriptUtils.executeSqlScript(connection, new ClassPathResource(INIT_SQL_PATH));
         } catch (final SQLException exception) {
             log.error(ExceptionUtils.getStackTrace(exception));

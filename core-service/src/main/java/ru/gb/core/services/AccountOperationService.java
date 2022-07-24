@@ -30,7 +30,6 @@ public class AccountOperationService {
     private final static String FIRST_CREDIT_ACCOUNT_NUMBER = "C000000001";
     private final AccountService accountService;
     private final BalanceOperationService balanceOperationService;
-    private final ClientService clientService;
     private final BalanceService balanceService;
     private final AccountConverter accountConverter;
 
@@ -40,7 +39,7 @@ public class AccountOperationService {
         try {
             Account account = new Account(
                     null,
-                    clientService.findByUsername(username).get(),
+                    username,
                     AccountType.C,
                     creteAccountNumber(AccountType.C),
                     AccountStatus.ACTIVE,
@@ -70,7 +69,7 @@ public class AccountOperationService {
 
             Account account = new Account(
                     null,
-                    clientService.findByUsername(username).get(),
+                    username,
                     AccountType.D,
                     creteAccountNumber(AccountType.D),
                     AccountStatus.ACTIVE,
