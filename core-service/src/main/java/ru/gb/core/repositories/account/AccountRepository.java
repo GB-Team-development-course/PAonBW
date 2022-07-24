@@ -16,15 +16,13 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query("""
             SELECT a FROM Account a
-            JOIN Client c ON c.id = a.client.id
-            WHERE c.username = ?1
+            WHERE a.username = ?1
             """)
     List<Account> findAllByClientUsername(String username);
 
     @Query("""
             SELECT a FROM Account a
-            JOIN Client c ON c.id = a.client.id
-            WHERE c.username = ?1 AND a.accountNumber = ?2
+            WHERE a.username = ?1 AND a.accountNumber = ?2
             """)
     Optional<Account> findByClientUsernameAccountByAccountNumber(String username, String AccountNumber);
 

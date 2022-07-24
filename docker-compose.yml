@@ -9,6 +9,7 @@ services:
       - 'spring.datasource.hikari.schema=test_schema'
     depends_on:
       - postgres_test_db
+      - discovery-service
     ports:
       - "9090:9090"
   gateway:
@@ -16,6 +17,7 @@ services:
     container_name: gateway-service
     depends_on:
       - main-service
+      - discovery-service
     ports:
       - "5555:5555"
     environment:
@@ -25,12 +27,18 @@ services:
     container_name: auth-service
     depends_on:
       - main-service
+      - discovery-service
     ports:
       - "9098:9098"
     environment:
       - 'spring.datasource.url=jdbc:postgresql://postgres_test_db:5432/postgres'
       - 'spring.datasource.hikari.schema=test_schema'
       - 'jwt.secret=h4f8093h4f983yhrt9834hr0934hf0hf493g493gf438rh438th34g34g'
+  discovery-service:
+    build: ./discovery-service
+    container_name: discovery-service
+    ports:
+      - "9091:9091"
   front-service:
     build: ./front-service
     container_name: front-service

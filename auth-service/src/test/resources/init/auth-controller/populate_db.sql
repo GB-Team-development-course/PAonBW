@@ -9,8 +9,3 @@ values ('ROLE_USER'),
 insert into test_schema.users_roles (user_id, role_id)
 values (1, 1),
        (2, 2);
-
-
-INSERT INTO test_schema.clients (id,username)
-VALUES (1, 'bob'),
-       (2,'john');
