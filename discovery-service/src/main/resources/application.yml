@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: discovery-service
+
+server:
+  port: 9091
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    service-url:
+      defaultZone: http://discovery-service:9091/eureka

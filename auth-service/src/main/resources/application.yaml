@@ -2,7 +2,15 @@ server:
   port: 9098
   servlet:
     context-path: /web-market-auth
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-service:9091/eureka
+
 spring:
+  application:
+    name: auth-service
   datasource:
     url: jdbc:postgresql://localhost:5435/postgres
     hikari:

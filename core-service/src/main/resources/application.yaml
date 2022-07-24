@@ -5,8 +5,14 @@ my:
   db:
     schema-name: test_schema
 
-spring:
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-service:9091/eureka
 
+spring:
+  application:
+      name: core-service
   datasource:
     url: jdbc:postgresql://localhost:5435/postgres
     hikari:
