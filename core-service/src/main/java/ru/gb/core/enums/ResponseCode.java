@@ -27,6 +27,7 @@ public enum ResponseCode {
     ACCOUNT_VALIDATION_ERROR(202, "Ошибка валидации входных данных"),
     ACCOUNT_AUTHENTICATION_ERROR(203, "Ошибка аутентификации"),
     ACCOUNT_CLOSED_ERROR(204, "Ошибка закрытия счёта"),
+    ACCOUNT_BLOCK_ERROR(205, "Ошибка блокировки счёта"),
     TRANSFER_EXECUTION_ERROR(300, "Системная ошибка выполнения перевода"),
     FIELD_VALIDATION_ERROR(301, "Ошибка валидации полей распоряжения"),
     TRANSFER_DIRECTION_ERROR(302, "Ошибка направления перевода"),
