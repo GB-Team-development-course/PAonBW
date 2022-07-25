@@ -3,7 +3,7 @@ package ru.gbank.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import ru.gbank.enums.Currency;
 import java.time.LocalDateTime;
 
 @Data
@@ -11,11 +11,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class AccountDto {
 
-    //todo вынести в общий модуль все dto
+    private Long accountId;
+    private Long productId;
     private String accountType;
     private String accountNumber;
     private String accountStatus;
-    private String currency;
+    private Currency currency;
     private LocalDateTime dtCreated;
     private LocalDateTime dtBlocked;
     private LocalDateTime dtClosed;

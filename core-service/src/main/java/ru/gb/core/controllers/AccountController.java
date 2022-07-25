@@ -51,11 +51,11 @@ public class AccountController {
     @ResponseStatus(HttpStatus.CREATED)
     public Response<AccountDto> createCreditAccount(@RequestHeader String username, @RequestBody CreateAccountRequest createAccountDto) {
         //todo добавить возможность выбора продукта
-        return accountOperationService
-                        .createCreditAccount(
-                                username,
-                                Currency.getById(createAccountDto.getCurrency()),
-                                createAccountDto.getCredit());
+        return accountOperationService.createCreditAccount(
+                username,
+                Currency.getById(createAccountDto.getCurrency()),
+                createAccountDto.getCredit(),
+                createAccountDto.getProductId());
     }
 
     @Operation(summary = "Запрос на создание дебетового счёта", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200")})
@@ -64,8 +64,9 @@ public class AccountController {
     public Response<AccountDto> createDebitAccount(@RequestHeader String username, @RequestBody CreateAccountRequest createAccountDto) {
         //todo добавить возможность выбора продукта
         return accountOperationService.createDebitAccount(
-                        username,
-                        Currency.getById(createAccountDto.getCurrency()));
+                username,
+                Currency.getById(createAccountDto.getCurrency()),
+                createAccountDto.getProductId());
     }
 
 

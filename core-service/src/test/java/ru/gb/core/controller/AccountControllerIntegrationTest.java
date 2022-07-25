@@ -79,7 +79,8 @@ public class AccountControllerIntegrationTest {
     void createDebitAccount() throws Exception {
         CreateAccountRequest accountRequest = new CreateAccountRequest(
                 1,
-                BigDecimal.valueOf(500L)
+                BigDecimal.valueOf(500L),
+                1
         );
 
         RequestBuilder request = MockMvcRequestBuilders
@@ -120,7 +121,8 @@ public class AccountControllerIntegrationTest {
     void createCreditAccount() throws Exception {
         CreateAccountRequest accountRequest = new CreateAccountRequest(
                 1,
-                BigDecimal.valueOf(500L)
+                BigDecimal.valueOf(500L),
+                1
         );
 
         RequestBuilder request = MockMvcRequestBuilders

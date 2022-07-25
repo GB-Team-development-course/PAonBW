@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class SchedulerService {
 
-    DebitOperationService debitOperationService;
+    private final DebitOperationService debitOperationService;
 
     @Scheduled(cron = "${cron.expression}")
     public void startTransactions() {

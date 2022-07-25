@@ -35,15 +35,17 @@ public class AccountOperationService {
     private final ClientService clientService;
     private final BalanceService balanceService;
     private final AccountConverter accountConverter;
+    private final ProductService productService;
 
     @Transactional
-    public Response<AccountDto> createCreditAccount(String username, Currency currency, BigDecimal credit) {
+    public Response<AccountDto> createCreditAccount(String username, Currency currency, BigDecimal credit, long productId) {
 
         Account account = new Account(
                 null,
                 clientService.findByUsername(username).get(),
                 AccountType.C,
                 createAccountNumber(AccountType.C),
+                productService.findById(productId).get(),
                 AccountStatus.ACTIVE,
                 currency, LocalDateTime.now(),
                 null,
@@ -61,13 +63,14 @@ public class AccountOperationService {
     }
 
     @Transactional
-    public Response<AccountDto> createDebitAccount(String username, Currency currency) {
+    public Response<AccountDto> createDebitAccount(String username, Currency currency, long productId) {
 
         Account account = new Account(
                 null,
                 clientService.findByUsername(username).get(),
                 AccountType.D,
                 createAccountNumber(AccountType.D),
+                productService.findById(productId).get(),
                 AccountStatus.ACTIVE,
                 currency,
                 LocalDateTime.now(),

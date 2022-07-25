@@ -5,15 +5,18 @@ VALUES (1, 'John'),
        (4, 'Bill'),
        (5, 'Joseph');
 
-INSERT INTO test_schema.accounts (client_id, account_type_id, account_number, account_status_id,
+INSERT INTO test_schema.products (id, name, product_type_id,product_status_id,int_rate,dt_created,dt_closed,dt_last_update)
+VALUES (1, 'Prod',1,1,20,'2009-10-23 13:49:25.000000',null,'2009-10-23 13:49:25.000000');
+
+INSERT INTO test_schema.accounts (client_id, account_type_id, account_number, product_id, account_status_id,
                       currency_id, dt_created, dt_blocked, dt_closed)
-VALUES (1, 1, 'C000000001', 1, 1, '2009-10-23 13:49:25.000000', null, null),
-       (2, 1, 'C000000002', 1, 1, '2009-10-23 13:49:26.000000', null, null),
-       (3, 1, 'C000000003', 1, 1, '2009-10-23 13:49:27.000000', null, null),
-       (4, 1, 'C000000004', 1, 1, '2009-10-23 13:49:28.000000', null, null),
-       (1, 2, 'D000000001', 1, 1, '2009-10-23 13:49:29.000000', null, null),
-       (2, 2, 'D000000002', 1, 1, '2009-10-23 13:49:30.000000', null, null),
-       (3, 2, 'D000000003', 1, 1, '2009-10-23 13:49:31.000000', null, null);
+VALUES (1, 1, 'C000000001',1, 1, 1, '2009-10-23 13:49:25.000000', null, null),
+       (2, 1, 'C000000002',1, 1, 1, '2009-10-23 13:49:26.000000', null, null),
+       (3, 1, 'C000000003',1, 1, 1, '2009-10-23 13:49:27.000000', null, null),
+       (4, 1, 'C000000004',1, 1, 1, '2009-10-23 13:49:28.000000', null, null),
+       (1, 2, 'D000000001',1, 1, 1, '2009-10-23 13:49:29.000000', null, null),
+       (2, 2, 'D000000002',1, 1, 1, '2009-10-23 13:49:30.000000', null, null),
+       (3, 2, 'D000000003',1, 1, 1, '2009-10-23 13:49:31.000000', null, null);
 
 INSERT INTO test_schema.balances (account_id, credit_balance, debit_balance, credit_debt)
 VALUES (1, 500, 0, 200),
