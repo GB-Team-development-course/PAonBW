@@ -13,7 +13,6 @@ import ru.gb.auth.dto.UserDtoRequest;
 import ru.gb.auth.entities.Role;
 import ru.gb.auth.entities.User;
 import ru.gb.auth.exceptions.UserAlreadyExistException;
-import ru.gb.auth.feign.CoreClient;
 import ru.gb.auth.repositories.RoleRepository;
 import ru.gb.auth.repositories.UserRepository;
 
@@ -30,8 +29,6 @@ public class UserService implements UserDetailsService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-
-    private final CoreClient coreClient;
 
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -53,10 +50,7 @@ public class UserService implements UserDetailsService {
             user.setEmail(userDto.getEmail());
             user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER").get()));
 
-            return Optional.of(userRepository.save(user)).map(u -> {
-                coreClient.add(u.getUsername());
-                return u;
-            });
+            return Optional.ofNullable(userRepository.save(user));
         }).orElseThrow(() -> new UserAlreadyExistException(userDto.getUsername()));
     }
 

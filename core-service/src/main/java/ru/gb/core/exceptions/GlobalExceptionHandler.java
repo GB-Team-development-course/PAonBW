@@ -14,12 +14,6 @@ import ru.gb.core.response.ResponseFactory;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<CoreError> failedCreateClientException(FailedCreateClientException e) {
-        log.error(e.getMessage(), e);
-        return new ResponseEntity<>(new CoreError("FAILED_CREATE_CLIENT", e.getMessage()), HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler
     public ResponseEntity<CoreError> failedCreateClientException(ValidationProcessException e) {
         log.error(e.getMessage(), e);
         return new ResponseEntity<>(new CoreError("FAILED_CREATE_CLIENT", e.getMessage()), HttpStatus.BAD_REQUEST);

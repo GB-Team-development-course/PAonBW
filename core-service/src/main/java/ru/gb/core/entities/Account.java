@@ -30,9 +30,9 @@ public class Account {
     /**
      * Уникальный ID клиента
      */
-    @JoinColumn(name = "client_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Client client;
+    @NonNull
+    @Column(name = "account_username")
+    private String username;
 
     /**
      * Тип счета:
