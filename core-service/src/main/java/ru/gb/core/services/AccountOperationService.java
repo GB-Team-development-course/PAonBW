@@ -19,6 +19,7 @@ import ru.gb.core.response.ResponseFactory;
 import ru.gb.core.util.AccountUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -33,15 +34,17 @@ public class AccountOperationService {
     private final BalanceOperationService balanceOperationService;
     private final BalanceService balanceService;
     private final AccountConverter accountConverter;
+    private final ProductService productService;
 
     @Transactional
-    public Response<AccountDto> createCreditAccount(String username, Currency currency, BigDecimal credit) {
+    public Response<AccountDto> createCreditAccount(String username, Currency currency, BigDecimal credit, long productId) {
 
         Account account = new Account(
                 null,
                 username,
                 AccountType.C,
                 createAccountNumber(AccountType.C),
+                productService.findById(productId).get(),
                 AccountStatus.ACTIVE,
                 currency, LocalDateTime.now(),
                 null,
@@ -59,13 +62,14 @@ public class AccountOperationService {
     }
 
     @Transactional
-    public Response<AccountDto> createDebitAccount(String username, Currency currency) {
+    public Response<AccountDto> createDebitAccount(String username, Currency currency, long productId) {
 
         Account account = new Account(
                 null,
                 username,
                 AccountType.D,
                 createAccountNumber(AccountType.D),
+                productService.findById(productId).get(),
                 AccountStatus.ACTIVE,
                 currency,
                 LocalDateTime.now(),
@@ -172,5 +176,11 @@ public class AccountOperationService {
                 && balance.get().getCreditBalance().compareTo(BigDecimal.ZERO) == 0
                 && balance.get().getDebitBalance().compareTo(BigDecimal.ZERO) == 0
                 && balance.get().getCreditDebt().compareTo(BigDecimal.ZERO) == 0;
+    }
+
+    public List<AccountDto> findAllDebitActiveByDate(LocalDate currentDate) {
+        return accountService.findAllDebitActiveByDate(currentDate)
+                .stream()
+                .map(accountConverter::entityToDto).toList();
     }
 }

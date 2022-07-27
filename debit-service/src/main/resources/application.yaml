@@ -1,0 +1,37 @@
+server:
+  port: 9099
+
+my:
+  db:
+    schema-name: test_schema
+
+# подключить к маршрутизации через discovery service
+integrations:
+  core-service:
+    url: http://localhost:9090
+
+# ежедневно в 00:01
+cron:
+  expression: 0 1 0 * * *
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5435/postgres
+    hikari:
+      schema: ${my.db.schema-name}
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    default-schema: ${my.db.schema-name}

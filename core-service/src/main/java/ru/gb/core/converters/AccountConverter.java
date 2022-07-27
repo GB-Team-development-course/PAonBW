@@ -7,12 +7,10 @@ import ru.gb.core.entities.Account;
 @Component
 public class AccountConverter {
 
-        public Account dtoToEntity(AccountDto accountDto) {
-            throw new UnsupportedOperationException();
-        }
-
         public AccountDto entityToDto(Account account) {
             AccountDto out = new AccountDto();
+            out.setProductId(account.getProduct().getId());
+            out.setAccountId(account.getId());
             out.setAccountStatus(account.getAccountStatus());
             out.setAccountNumber(account.getAccountNumber());
             out.setAccountType(account.getAccountType());

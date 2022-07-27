@@ -52,6 +52,13 @@ public class Account {
     private String accountNumber;
 
     /**
+     * Продукт
+     */
+    @JoinColumn(name = "product_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Product product;
+
+    /**
      * Статус счёта.
      */
     @NonNull

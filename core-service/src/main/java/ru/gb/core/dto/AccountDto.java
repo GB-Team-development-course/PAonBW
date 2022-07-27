@@ -15,8 +15,10 @@ import java.time.LocalDateTime;
 @Schema(description = "Модель счёта")
 public class AccountDto {
 
+    private Long accountId;
     @Schema(description = "Тип счёта", required = true, example = "С")
     private AccountType accountType;
+    private Long productId;
     @Schema(description = "Номер счёта", required = true, example = "С1234")
     private String accountNumber;
     @Schema(description = "Статус счёта", required = true, example = "ACTIVE")
