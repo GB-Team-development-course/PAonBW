@@ -1,20 +1,24 @@
 server:
-  port: 9099
+  port: 8998
 
 my:
   db:
     schema-name: test_schema
 
-# подключить к маршрутизации через discovery service
 integrations:
   core-service:
-    url: http://localhost:9090
+        url: http://core-service
+
 
 # ежедневно в 00:01
 cron:
   expression: 0 1 0 * * *
 
 spring:
+
+  application:
+    name: debit-service
+
   datasource:
     url: jdbc:postgresql://localhost:5435/postgres
     hikari:
@@ -35,3 +39,8 @@ spring:
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
     default-schema: ${my.db.schema-name}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-service:9091/eureka
