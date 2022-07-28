@@ -11,6 +11,7 @@ public class AccountConverter {
             AccountDto out = new AccountDto();
             out.setProductId(account.getProduct().getId());
             out.setAccountId(account.getId());
+            out.setUsername(account.getUsername());
             out.setAccountStatus(account.getAccountStatus());
             out.setAccountNumber(account.getAccountNumber());
             out.setAccountType(account.getAccountType());

@@ -10,7 +10,7 @@ public class BalanceConverter {
 
     public BalanceDto entityToDto(Balance balance) {
         BalanceDto out = new BalanceDto();
-        out.setAccount(balance.getId());
+        out.setAccount(balance.getAccount().getId());
         out.setCreditBalance(balance.getCreditBalance());
         out.setDebitBalance(balance.getDebitBalance());
         out.setCreditDebt(balance.getCreditDebt());

@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class AccountDto {
 
     private Long accountId;
+    private String username;
     private Long productId;
     private String accountType;
     private String accountNumber;

@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class AccountDto {
 
     private Long accountId;
+    private String username;
     @Schema(description = "Тип счёта", required = true, example = "С")
     private AccountType accountType;
     private Long productId;

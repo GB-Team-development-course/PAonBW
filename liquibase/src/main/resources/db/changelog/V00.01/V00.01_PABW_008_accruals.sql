@@ -1,6 +1,7 @@
 CREATE TABLE test_schema.accruals
 (
     id BIGSERIAL PRIMARY KEY ,
+    username VARCHAR(255) NOT NULL ,
     target_account VARCHAR(255) NOT NULL ,
     amount NUMERIC NOT NULL ,
     currency_id INTEGER NOT NULL ,

@@ -72,6 +72,7 @@ public class DebitOperationService {
 
          Accrual accrual = new Accrual(
                  null,
+                 account.getUsername(),
                  account.getAccountNumber(),
                  amount,
                  account.getCurrency(),
@@ -93,9 +94,7 @@ public class DebitOperationService {
                  accrual.getCurrency(),
                  "Начисление процентов по счёту"
          );
-         //todo получить ответ и обновить accrual
-         orderIntegrationService.sentOrderRequest(orderDtoRequest);
+         orderIntegrationService.sentOrderRequest(orderDtoRequest,accrual.getUsername());
       });
-      //todo завести технический счёт перевод с T->D
    }
 }
