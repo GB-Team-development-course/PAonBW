@@ -9,6 +9,7 @@ services:
       - 'spring.datasource.hikari.schema=test_schema'
     depends_on:
       - postgres_test_db
+      - discovery-service
     ports:
       - "9099:9099"
   main-service:
