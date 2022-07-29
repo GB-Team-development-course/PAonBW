@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.gb.core.entities.Balance;
 import ru.gb.core.repositories.balance.BalanceRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,5 +23,9 @@ public class BalanceService {
 
     public Balance save(Balance balance) {
         return balanceRepository.save(balance);
+    }
+
+    public List<Balance> findAll(){
+        return balanceRepository.findAll();
     }
 }

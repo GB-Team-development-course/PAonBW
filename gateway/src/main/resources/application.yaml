@@ -1,7 +1,14 @@
 server:
   port: 5555
 
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-service:9091/eureka
+
 spring:
+  application:
+    name: gateway
   cloud:
     gateway:
       globalcors:
@@ -15,7 +22,7 @@ spring:
             allowedHeaders: "*"
       routes:
         - id: core-service
-          uri: http://core-service:9090/
+          uri: lb://core-service
           predicates:
             - Path=/core/**
           filters:
@@ -23,10 +30,18 @@ spring:
             - PrefixPath=/
             - JwtAuthFilter
         - id: auth-service
-          uri: http://auth-service:9098/
+          uri: lb://auth-service
           predicates:
             - Path=/auth/**
           filters:
             - StripPrefix=1
             - PrefixPath=/web-market-auth
+            - JwtAuthFilter
+        - id: debit-service
+          uri: lb://debit-service
+          predicates:
+            - Path=/debit/**
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/
             - JwtAuthFilter

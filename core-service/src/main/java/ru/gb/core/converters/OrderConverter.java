@@ -6,9 +6,6 @@ import ru.gb.core.entities.Order;
 
 @Component
 public class OrderConverter {
-    public Order dtoToEntity(OrderDtoResponse orderDtoResponse) {
-        throw new UnsupportedOperationException();
-    }
 
     public OrderDtoResponse entityToDto(Order order) {
         OrderDtoResponse out = new OrderDtoResponse();

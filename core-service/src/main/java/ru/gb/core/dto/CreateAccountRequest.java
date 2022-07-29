@@ -24,4 +24,9 @@ public class CreateAccountRequest {
      */
     private BigDecimal credit;
 
+    /**
+     * Id продукта
+     */
+    private long productId;
+
 }

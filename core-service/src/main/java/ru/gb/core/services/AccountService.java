@@ -7,6 +7,9 @@ import ru.gb.core.entities.Account;
 import ru.gb.core.enums.AccountType;
 import ru.gb.core.repositories.account.AccountRepository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,5 +40,9 @@ public class AccountService {
     @NonNull
     public Account create(@NonNull final Account account) {
         return accountRepository.save(account);
+    }
+
+    public List<Account> findAllDebitActiveByDate(LocalDate currentDate) {
+        return accountRepository.findAllDebitActiveByDate(LocalDateTime.of(currentDate,LocalTime.MIN),AccountType.D);
     }
 }
