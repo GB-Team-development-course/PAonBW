@@ -14,9 +14,9 @@ import ru.gb.core.response.ResponseFactory;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<CoreError> failedCreateClientException(ValidationProcessException e) {
+    public ResponseEntity<CoreError> failedValidateOrderTransfer(ValidationProcessException e) {
         log.error(e.getMessage(), e);
-        return new ResponseEntity<>(new CoreError("FAILED_CREATE_CLIENT", e.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new CoreError("FAILED_VALIDATION_PROCESS", e.getMessage()), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler
     public ResponseEntity<Response> failedFoundAccountException(AccountNotFoundException e) {

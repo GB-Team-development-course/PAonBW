@@ -12,6 +12,7 @@ import ru.gb.core.enums.AccountType;
 import ru.gb.core.enums.OrderStatus;
 import ru.gb.core.exceptions.ValidationProcessException;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -20,13 +21,10 @@ import java.time.LocalDateTime;
 public class TransferOperationService {
 
     private final OrderService orderService;
-    private final AccountService accountService;
     private final BalanceService balanceService;
 
+    @Transactional
     public Order doTransferByOrder(Account sourceAccount, Account targetAccount, Order order) {
-        order.setSourceAccount(sourceAccount.getAccountNumber());
-        order.setTargetAccount(targetAccount.getAccountNumber());
-
         doTransferFromBalanceToTargetBalance(sourceAccount, targetAccount, order.getAmount());
 
         order.setOrderStatus(OrderStatus.SUCCESS);
@@ -35,10 +33,9 @@ public class TransferOperationService {
     }
 
     private void doTransferFromBalanceToTargetBalance(Account accountSource, Account accountTarget, BigDecimal valueTransfer) {
-        Balance balanceSource = balanceService.findByAccountId(accountSource.getId())
-                .orElseThrow(() -> new ValidationProcessException("Баланс не найден"));
-        Balance balanceTarget = balanceService.findByAccountId(accountTarget.getId())
-                .orElseThrow(() -> new ValidationProcessException("Баланс не найден"));
+        // get() потому что проверка сущности баланса была в сервисе валидации
+        Balance balanceSource = balanceService.findByAccountId(accountSource.getId()).get();
+        Balance balanceTarget = balanceService.findByAccountId(accountTarget.getId()).get();
 
         if (accountSource.getAccountType().compareTo(AccountType.C) == 0) {
             balanceSource.setCreditBalance(balanceSource.getCreditBalance().subtract(valueTransfer));

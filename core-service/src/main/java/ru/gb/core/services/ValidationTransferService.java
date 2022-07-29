@@ -21,6 +21,9 @@ import ru.gb.core.response.ResponseFactory;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -33,56 +36,121 @@ public class ValidationTransferService {
 
     @Transactional
     public Response<OrderDtoResponse> validateTransfer(String username, OrderDtoRequest orderDtoRequest) {
-        try {
-            Account sourceAccount = accountService.findByClientUsernameAndAccountNumber(
-                    username, orderDtoRequest.getSourceAccount()).orElseThrow(
-                    () -> new ValidationProcessException("Аккаунт не найден!")
-            );
+        List<String> errors = new ArrayList<>();
 
-            Account targetAccount = accountService.findByAccountNumber(
-                    orderDtoRequest.getTargetAccount()).orElseThrow(
-                    () -> new ValidationProcessException("Аккаунт адресант не найден!")
-            );
+        Optional<Account> targetAccount = validateTargetAccount(orderDtoRequest.getTargetAccount());
 
-            if (sourceAccount.getAccountNumber().equals(targetAccount.getAccountNumber())) {
-                throw new ValidationProcessException("Перевод доступен только на другой счет!");
+        if (targetAccount.isEmpty()) {
+            errors.add("Аккаунт получатель не найден!");
+        } else {
+            if (checkAccountIsNotBlocked(targetAccount.get())) {
+                errors.add("Аккаунт заблокирован");
+            }
+            if (checkAccountIsNotClosed(targetAccount.get())) {
+                errors.add("Аккаунт закрыт");
+            }
+            if (checkBalanceOfAccountIsNotExists(targetAccount.get())) {
+                errors.add("Баланс отсутствует у получателя");
+            }
+        }
+        Optional<Account> sourceAccount = validateSourceAccount(orderDtoRequest.getSourceAccount(), username);
+
+        if (sourceAccount.isEmpty()) {
+            errors.add("Аккаунт отправитель не найден!");
+        } else {
+            if (targetAccount.isPresent()
+                    && sourceAccount.get().getAccountNumber().equals(targetAccount.get().getAccountNumber())) {
+                errors.add("Перевод доступен только на другой счет !");
+            }
+            //Сравнение суммы перевода и баланс аккаунта, если аккаунт найден
+
+            if (checkAccountIsNotBlocked(sourceAccount.get())) {
+                errors.add("Аккаунт заблокирован");
             }
 
-            if (!doValidationOfAccountBalanceByAccount(sourceAccount, orderDtoRequest.getAmount())) {
-                throw new ValidationProcessException("Баланс меньше суммы перевода!");
+            if (checkAccountIsNotClosed(sourceAccount.get())) {
+                errors.add("Аккаунт закрыт");
             }
 
+            if (checkBalanceOfAccountIsNotExists(sourceAccount.get())) {
+                errors.add("Баланс отсутствует у отправителя");
+            }
+
+            if (!doValidationOfAccountBalanceByAccount(sourceAccount.get(), orderDtoRequest.getAmount())) {
+                errors.add("Баланс меньше суммы перевода!");
+            }
+        }
+
+        if (errors.isEmpty()) {
             Order order = new Order();
-            order.setSourceAccount(sourceAccount.getAccountNumber());
-            order.setTargetAccount(targetAccount.getAccountNumber());
+            order.setSourceAccount(sourceAccount.get().getAccountNumber());
+            order.setTargetAccount(targetAccount.get().getAccountNumber());
             order.setExternalOrderGuid(UUID.randomUUID());
             order.setExecutionStart(LocalDateTime.now());
             order.setCurrency(orderDtoRequest.getCurrency());
-            order.setTransferDirection(TransferDirection.D_TO_D); //TODO findTransferDirection
+            order.setTransferDirection(getTransferDirectionByAccountsType(sourceAccount.get(), targetAccount.get()));
             order.setPaymentPurpose(orderDtoRequest.getPaymentPurpose());
             order.setAmount(orderDtoRequest.getAmount());
-
-            return ResponseFactory.successResponse(ResponseCode.OPERATION_COMPLETE,
+            return ResponseFactory.successResponse(
+                    ResponseCode.ACCOUNT_OPERATION_COMPLETE,
                     orderConverter.entityToDto(
-                            transferOperationService.doTransferByOrder(sourceAccount, targetAccount, order))
+                            transferOperationService.doTransferByOrder(sourceAccount.get(), targetAccount.get(), order)
+                    )
             );
-        } catch (Exception e) {
-            return ResponseFactory.errorResponse(ResponseCode.ACCOUNT_VALIDATION_ERROR, e.getMessage());
+        } else {
+            throw new ValidationProcessException(errors);
         }
     }
 
-    //TODO checkAccountIsBlocked and checkAccountIsClosed
+    private boolean checkBalanceOfAccountIsNotExists(Account account) {
+        return balanceService.findByAccountId(account.getId()).isEmpty();
+    }
 
-    //Метод валидации баланса
-    private boolean doValidationOfAccountBalanceByAccount(Account account, BigDecimal valueTransfer) {
-        Balance balance = balanceService.findByAccountId(account.getId()).orElseThrow(
-                () -> new ValidationProcessException("Ошибка баланса!")
-        );
+    private TransferDirection getTransferDirectionByAccountsType(Account sourceAccount, Account targetAccount) {
+        AccountType sourceTransfer = sourceAccount.getAccountType();
+        AccountType targetTransfer = targetAccount.getAccountType();
 
-        if (account.getAccountType().compareTo(AccountType.C) == 0) {
-            return balance.getCreditBalance().add(balance.getCreditDebt()).compareTo(valueTransfer) >= 0;
+        if (sourceTransfer.equals(AccountType.C)) {
+            if (targetTransfer.equals(AccountType.D)) {
+                return TransferDirection.C_TO_D;
+            } else if (targetTransfer.equals(AccountType.C)) {
+                return TransferDirection.C_TO_C;
+            }
         } else {
-            return balance.getDebitBalance().compareTo(valueTransfer) >= 0;
+            if (targetTransfer.equals(AccountType.C)) {
+                return TransferDirection.D_TO_C;
+            }
         }
+        return TransferDirection.D_TO_D;
+    }
+
+    private boolean checkAccountIsNotBlocked(Account account) {
+        return account.getDtBlocked() == null;
+    }
+
+    private boolean checkAccountIsNotClosed(Account account) {
+        return account.getDtClosed() == null;
+    }
+
+    //Проверка баланса
+    private boolean doValidationOfAccountBalanceByAccount(Account account, BigDecimal valueTransfer) {
+        Optional<Balance> balance = balanceService.findByAccountId(account.getId());
+        if (balance.isPresent()) {
+            if (account.getAccountType().compareTo(AccountType.C) == 0) {
+                return balance.get().getCreditBalance().add(balance.get().getCreditDebt()).compareTo(valueTransfer) >= 0;
+            } else {
+                return balance.get().getDebitBalance().compareTo(valueTransfer) >= 0;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private Optional<Account> validateSourceAccount(String accountSourceNumber, String username) {
+        return accountService.findByClientUsernameAndAccountNumber(username, accountSourceNumber);
+    }
+
+    private Optional<Account> validateTargetAccount(String accountSourceNumber) {
+        return accountService.findByAccountNumber(accountSourceNumber);
     }
 }
