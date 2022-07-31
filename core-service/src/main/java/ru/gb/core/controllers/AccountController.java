@@ -27,8 +27,13 @@ public class AccountController {
     private final AccountOperationService accountOperationService;
 
     @GetMapping("/activeDebit/{currentDate}")
-    public List<AccountDto> findByDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate currentDate) {
+    public List<AccountDto> findDebitByDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate currentDate) {
         return accountOperationService.findAllDebitActiveByDate(currentDate);
+    }
+
+    @GetMapping("/activeCredit/{currentDate}")
+    public List<AccountDto> findCreditByDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate currentDate) {
+        return accountOperationService.findAllCreditActiveByDate(currentDate);
     }
 
 

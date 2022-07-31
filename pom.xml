@@ -12,6 +12,7 @@
 		<module>liquibase</module>
 		<module>gateway</module>
 		<module>debit-service</module>
+		<module>credit-service</module>
 	</modules>
 
 	<parent>
