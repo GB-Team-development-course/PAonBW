@@ -1,4 +1,4 @@
-CREATE TABLE test_schema.orders
+CREATE TABLE pabw_core.orders
 (
     id                     BIGSERIAL PRIMARY KEY,
     external_order_guid    UUID   NOT NULL,

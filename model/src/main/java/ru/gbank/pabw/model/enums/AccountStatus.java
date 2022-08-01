@@ -18,9 +18,9 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public enum AccountStatus {
 
-    ACTIVE(1, "Активен"),
-    BLOCKED(2, "Заблокирован"),
-    CLOSED(3, "Закрыт");
+    ACTIVE(0, "Активен"),
+    BLOCKED(1, "Заблокирован"),
+    CLOSED(2, "Закрыт");
 
     private final static Map<Integer, AccountStatus> LOOKUP_BY_ID = Stream
             .of(AccountStatus.values())

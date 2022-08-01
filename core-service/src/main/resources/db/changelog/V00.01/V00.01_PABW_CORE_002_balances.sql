@@ -1,7 +1,7 @@
-CREATE TABLE test_schema.balances
+CREATE TABLE pabw_core.balances
 (
     id BIGSERIAL PRIMARY KEY,
-    account_id BIGINT NOT NULL REFERENCES test_schema.accounts(id),
+    account_id BIGINT NOT NULL REFERENCES pabw_core.accounts(id),
     credit_balance NUMERIC,
     debit_balance NUMERIC,
     credit_debt NUMERIC,
