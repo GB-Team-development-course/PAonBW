@@ -1,14 +1,9 @@
 server:
   port: 9100
 
-my:
-  db:
-    schema-name: test_schema
-
 integrations:
   core-service:
         url: http://core-service
-
 
 # ежедневно в 00:01
 cron:
@@ -22,9 +17,9 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5435/postgres
     hikari:
-      schema: ${my.db.schema-name}
-    username: postgres
-    password: postgres
+      schema: pabw_credit
+    username: pabw_credit_user
+    password: pass
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -38,7 +33,7 @@ spring:
 
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
-    default-schema: ${my.db.schema-name}
+    default-schema: pabw_credit
 
 eureka:
   client:

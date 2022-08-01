@@ -1,4 +1,4 @@
-CREATE TABLE test_schema.products
+CREATE TABLE pabw_core.products
 (
     id BIGSERIAL PRIMARY KEY ,
     name VARCHAR(255) NOT NULL ,

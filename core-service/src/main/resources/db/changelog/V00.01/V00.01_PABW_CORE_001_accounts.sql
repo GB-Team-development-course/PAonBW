@@ -1,10 +1,10 @@
-CREATE TABLE test_schema.accounts
+CREATE TABLE pabw_core.accounts
 (
     id BIGSERIAL PRIMARY KEY ,
-    client_id BIGINT NOT NULL REFERENCES test_schema.clients(id),
+    username varchar(255) NOT NULL,
     account_type_id INTEGER NOT NULL ,
     account_number VARCHAR(255) NOT NULL ,
-    product_id BIGINT NOT NULL REFERENCES test_schema.products(id),
+    product_id BIGINT NOT NULL REFERENCES pabw_core.products(id),
     account_status_id INTEGER NOT NULL ,
     currency_id INTEGER NOT NULL ,
     dt_created TIMESTAMP NOT NULL ,

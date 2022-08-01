@@ -15,9 +15,9 @@ import java.util.stream.Stream;
  */
 @AllArgsConstructor
 public enum AccountType {
-    C(1, "Кредитный счет"),
-    D(2, "Депозитный счет"),
-    T(3,"Технический счёт");
+    C(0, "Кредитный счет"),
+    D(1, "Депозитный счет"),
+    T(2,"Технический счёт");
 
     private final int id;
 

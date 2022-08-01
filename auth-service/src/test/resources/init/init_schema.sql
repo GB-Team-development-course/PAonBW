@@ -1,1 +1,1 @@
-CREATE SCHEMA test_schema;
+CREATE SCHEMA pabw_auth;

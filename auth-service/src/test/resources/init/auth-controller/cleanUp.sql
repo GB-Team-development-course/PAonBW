@@ -1,1 +1,1 @@
-TRUNCATE TABLE test_schema.users, test_schema.roles, test_schema.users_roles RESTART IDENTITY CASCADE;
+TRUNCATE TABLE pabw_auth.users, pabw_auth.roles,pabw_auth.users_roles RESTART IDENTITY CASCADE;

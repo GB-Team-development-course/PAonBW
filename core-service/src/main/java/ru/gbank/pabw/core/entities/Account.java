@@ -31,7 +31,7 @@ public class Account {
      * Уникальный ID клиента
      */
     @NonNull
-    @Column(name = "account_username")
+    @Column(name = "username")
     private String username;
 
     /**

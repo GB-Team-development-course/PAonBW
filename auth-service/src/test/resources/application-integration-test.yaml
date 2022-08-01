@@ -9,7 +9,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        default_schema: test_schema
+        default_schema: pabw_auth
 
 postgres:
   image: postgres:13.2
@@ -23,7 +23,7 @@ postgres:
 
 liquibase:
   default:
-    schema: test_schema
+    schema: pabw_auth
   master:
     changelog:
       path: db/changelog/db.changelog-master.yaml

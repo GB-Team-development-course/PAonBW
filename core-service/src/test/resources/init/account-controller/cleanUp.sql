@@ -1,1 +1,1 @@
-TRUNCATE TABLE test_schema.accounts, test_schema.balances RESTART IDENTITY CASCADE;
+TRUNCATE TABLE pabw_core.products, pabw_core.accounts, pabw_core.balances RESTART IDENTITY CASCADE;

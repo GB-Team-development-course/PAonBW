@@ -16,8 +16,8 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public enum ProductType {
 
-    CREDIT(1, "Кредитный"),
-    DEPOSIT(2, "Депозитный");
+    CREDIT(0, "Кредитный"),
+    DEPOSIT(1, "Депозитный");
 
     private final static Map<Integer, ProductType> LOOKUP_BY_ID = Stream
             .of(ProductType.values())

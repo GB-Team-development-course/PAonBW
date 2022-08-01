@@ -18,10 +18,10 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public enum TransferDirection {
 
-    C_TO_C(1, "Кредитный - Кредитный"),
-    C_TO_D(2, "Кредитный - Дебетовый"),
-    D_TO_C(3, "Дебетовый - Кредитный"),
-    D_TO_D(4, "Дебетовый - Дебетовый");
+    C_TO_C(0, "Кредитный - Кредитный"),
+    C_TO_D(1, "Кредитный - Дебетовый"),
+    D_TO_C(2, "Дебетовый - Кредитный"),
+    D_TO_D(3, "Дебетовый - Дебетовый");
 
     private final static Map<Integer, TransferDirection> LOOKUP_BY_ID = Stream
             .of(TransferDirection.values())

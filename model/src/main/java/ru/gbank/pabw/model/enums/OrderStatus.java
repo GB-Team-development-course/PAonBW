@@ -17,10 +17,10 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public enum OrderStatus {
 
-    IN_PROGRESS(1, "В исполнении"),
-    REJECTED(2, "Отказ"), //Ошибка со строны Клиента
-    SUCCESS(3, "Успешно"),
-    ERROR(4, "Ошибка"); // Ошибка со стороны сервиса
+    IN_PROGRESS(0, "В исполнении"),
+    REJECTED(1, "Отказ"), //Ошибка со строны Клиента
+    SUCCESS(2, "Успешно"),
+    ERROR(3, "Ошибка"); // Ошибка со стороны сервиса
 
     private static final Map<Integer, OrderStatus> LOOKUP_BY_ID = Stream
             .of(OrderStatus.values())

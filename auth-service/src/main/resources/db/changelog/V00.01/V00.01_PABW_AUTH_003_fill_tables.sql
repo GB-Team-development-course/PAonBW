@@ -1,3 +1,3 @@
-insert into test_schema.roles (name)
+insert into pabw_auth.roles (name)
 values ('ROLE_USER'),
        ('ROLE_ADMIN');
