@@ -183,4 +183,10 @@ public class AccountOperationService {
                 .stream()
                 .map(accountConverter::entityToDto).toList();
     }
+
+    public List<AccountDto> findAllCreditActiveByDate(LocalDate currentDate) {
+        return accountService.findAllDebitActiveByDate(currentDate)
+                .stream()
+                .map(accountConverter::entityToDto).toList();
+    }
 }

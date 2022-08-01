@@ -43,6 +43,10 @@ public class AccountService {
     }
 
     public List<Account> findAllDebitActiveByDate(LocalDate currentDate) {
-        return accountRepository.findAllDebitActiveByDate(LocalDateTime.of(currentDate,LocalTime.MIN),AccountType.D);
+        return accountRepository.findAllActiveByDate(LocalDateTime.of(currentDate,LocalTime.MIN),AccountType.D);
+    }
+
+    public List<Account> findAllCreditActiveByDate(LocalDate currentDate) {
+        return accountRepository.findAllActiveByDate(LocalDateTime.of(currentDate,LocalTime.MIN),AccountType.C);
     }
 }
