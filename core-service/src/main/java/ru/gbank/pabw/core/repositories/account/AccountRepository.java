@@ -41,5 +41,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             AND (a.dtClosed < ?1 OR a.dtClosed IS NULL) 
             AND a.accountType = ?2
             """)
-    List<Account> findAllDebitActiveByDate(@NonNull final LocalDateTime currentDate, @NonNull final AccountType accountType);
+    List<Account> findAllActiveByDate(@NonNull final LocalDateTime currentDate, @NonNull final AccountType accountType);
+
 }

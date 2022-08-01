@@ -35,12 +35,20 @@ spring:
             - Path=/auth/**
           filters:
             - StripPrefix=1
-            - PrefixPath=/web-market-auth
+            - PrefixPath=/
             - JwtAuthFilter
         - id: debit-service
           uri: lb://debit-service
           predicates:
             - Path=/debit/**
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/
+            - JwtAuthFilter'
+        - id: credit-service
+          uri: lb://credit-service
+          predicates:
+            - Path=/credit/**
           filters:
             - StripPrefix=1
             - PrefixPath=/
