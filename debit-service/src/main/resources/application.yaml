@@ -12,7 +12,8 @@ integrations:
 
 # ежедневно в 00:01
 cron:
-  expression: 0 1 0 * * *
+#  expression: 0 1 0 * * *
+  expression: 0 * * * * *
 
 spring:
 
