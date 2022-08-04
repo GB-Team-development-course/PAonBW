@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public enum Currency {
 
-    USD(1, 840, "Доллар США");
+    USD(0, 840, "Доллар США");
 
     private final static Map<Integer, Currency> LOOKUP_BY_ID = Stream
             .of(Currency.values())

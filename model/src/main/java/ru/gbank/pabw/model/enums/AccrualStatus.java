@@ -18,10 +18,10 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public enum AccrualStatus {
 
-    IN_PROGRESS(1, "В исполнении"),
-    REJECTED(2, "Отказ, ошибка на стороне клиента"),
-    SUCCESS(3, "Успешно"),
-    ERROR(4, "Ошибка на стороне сервиса");
+    IN_PROGRESS(0, "В исполнении"),
+    REJECTED(1, "Отказ, ошибка на стороне клиента"),
+    SUCCESS(2, "Успешно"),
+    ERROR(3, "Ошибка на стороне сервиса");
 
     private static final Map<Integer, AccrualStatus> LOOKUP_BY_ID = Stream
             .of(AccrualStatus.values())
