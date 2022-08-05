@@ -3,8 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>spring-web</artifactId>
-        <groupId>com.geekbrains</groupId>
+        <artifactId>pabw</artifactId>
+        <groupId>ru.gbank.pabw</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -14,6 +14,7 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <testContainers.version>1.16.0</testContainers.version>
     </properties>
 
     <dependencies>
@@ -37,9 +38,19 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.geekbrains</groupId>
-            <artifactId>liquibase</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>4.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>${testContainers.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${testContainers.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -60,9 +71,10 @@
             <version>1.6.9</version>
         </dependency>
         <dependency>
-            <groupId>net.lbruun.springboot</groupId>
-            <artifactId>preliquibase-spring-boot-starter</artifactId>
-            <version>1.1.1</version>
+            <groupId>ru.gbank.pabw</groupId>
+            <artifactId>models</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

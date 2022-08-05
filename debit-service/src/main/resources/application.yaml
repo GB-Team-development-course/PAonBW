@@ -1,10 +1,6 @@
 server:
   port: 8998
 
-my:
-  db:
-    schema-name: test_schema
-
 integrations:
   core-service:
         url: http://core-service
@@ -22,9 +18,9 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5435/postgres
     hikari:
-      schema: ${my.db.schema-name}
-    username: postgres
-    password: postgres
+      schema: pabw_debit
+    username: pabw_debit_user
+    password: pass
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -38,7 +34,7 @@ spring:
 
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
-    default-schema: ${my.db.schema-name}
+    default-schema: pabw_debit
 
 eureka:
   client:

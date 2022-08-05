@@ -1,7 +1,5 @@
 server:
   port: 9098
-  servlet:
-    context-path: /web-market-auth
 
 eureka:
   client:
@@ -14,10 +12,13 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5435/postgres
     hikari:
-      schema: test_schema
-    username: postgres
-    password: postgres
+      schema: pabw_auth
+    username: pabw_auth_user
+    password: pass
     driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    default-schema: pabw_auth
 
   jpa:
     open-in-view: false
