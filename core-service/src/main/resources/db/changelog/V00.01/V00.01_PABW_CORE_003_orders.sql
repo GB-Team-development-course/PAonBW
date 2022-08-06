@@ -2,7 +2,7 @@ CREATE TABLE pabw_core.orders
 (
     id                     BIGSERIAL PRIMARY KEY,
     external_order_guid    UUID   NOT NULL,
-    transfer_direction_id  INTEGER   NOT NULL,
+    transfer_direction_id  INTEGER,
     source_account         VARCHAR   NOT NULL,
     target_account         VARCHAR   NOT NULL,
     amount                 NUMERIC   NOT NULL,
