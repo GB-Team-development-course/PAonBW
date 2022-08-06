@@ -184,7 +184,7 @@ public class AccountOperationService {
     }
 
     public List<AccountDto> findAllCreditActiveByDate(LocalDate currentDate) {
-        return accountService.findAllDebitActiveByDate(currentDate)
+        return accountService.findAllCreditActiveByDate(currentDate)
                 .stream()
                 .map(accountConverter::entityToDto).toList();
     }

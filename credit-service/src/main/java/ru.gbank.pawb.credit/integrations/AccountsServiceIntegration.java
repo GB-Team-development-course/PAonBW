@@ -23,7 +23,7 @@ public class AccountsServiceIntegration {
 
 		return webClient
 				.get()
-				.uri("/api/v1/account/activeCredit/")
+				.uri("/api/v1/account/activeCredit/" + date)
 				.retrieve()
 				.onStatus(HttpStatus::is4xxClientError, clientResponse -> clientResponse.bodyToMono(CreditServiceError.class).map(body -> new CoreServiceException(body.getMessage())))
 				.onStatus(HttpStatus::is5xxServerError, clientResponse -> clientResponse.bodyToMono(CreditServiceError.class).map(body -> new HttpServerErrorException(HttpStatus.GATEWAY_TIMEOUT, body.getMessage())))

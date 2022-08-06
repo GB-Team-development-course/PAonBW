@@ -15,8 +15,11 @@ public class AppConfig {
 	private String coreServiceUrl;
 
 	@Bean
-	@LoadBalanced
 	public WebClient getWebClient() {
-		return WebClient.builder().baseUrl(coreServiceUrl).defaultCookie("cookieKey", "cookieValue").defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).build();
+		return WebClient.builder()
+				.baseUrl(coreServiceUrl)
+				.defaultCookie("cookieKey", "cookieValue")
+				.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+				.build();
 	}
 }
