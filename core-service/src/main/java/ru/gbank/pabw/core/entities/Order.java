@@ -39,7 +39,7 @@ public class Order {
     /**
      * Направление перевода
      */
-    @NonNull
+    @Nullable
     @Column(name = "transfer_direction_id")
     private TransferDirection transferDirection;
 

@@ -40,6 +40,9 @@ public class DebitOperationService {
    private final AccrualService accrualService;
    private final OrderIntegrationService orderIntegrationService;
 
+   private final String TECHNICAL_ACCOUNT_NUMBER = "T1001";
+   private final String TECHNICAL_ACCOUNT_USERNAME = "Technical";
+
    public void calculateDailyAccruals(LocalDate currentDate) {
 
       ObjectMapper mapper = JsonMapper.builder()
@@ -88,13 +91,13 @@ public class DebitOperationService {
 
       accruals.forEach(accrual -> {
          OrderDtoRequest orderDtoRequest = new OrderDtoRequest(
-                 "T1001",
+                 TECHNICAL_ACCOUNT_NUMBER,
                  accrual.getTargetAccount(),
                  accrual.getAmount(),
                  accrual.getCurrency(),
                  "Начисление процентов по счёту"
          );
-         orderIntegrationService.sentOrderRequest(orderDtoRequest,accrual.getUsername());
+         orderIntegrationService.sentOrderRequest(orderDtoRequest,TECHNICAL_ACCOUNT_USERNAME);
       });
    }
 }
