@@ -48,6 +48,11 @@
                 <label for="creditSum">Сумма кредита</label>
             </div>
             <p></p>
+            <div class="form-floating input-group-sm">
+                <input type="text" class="form-control"  id="creditProductId" placeholder="Номер кредитного продукта" ng-model="creditInfo.productId">
+                <label for="creditSum">Номер кредитного продукта</label>
+            </div>
+            <p></p>
             <button class="btn btn-outline-warning btn-sm" style="width: 100%;" type="submit">Оформить кредит</button>
         </form>
     </div>
@@ -59,8 +64,46 @@
                 <input type="text" class="form-control"  id="debitCurrency" placeholder="Валюта депозита" ng-model="debitInfo.currency">
                 <label for="debitCurrency">Валюта</label>
             </div>
+            <div class="form-floating input-group-sm">
+                <input type="text" class="form-control"  id="debitProductId" placeholder="Номер дебетового продукта" ng-model="debitInfo.productId">
+                <label for="creditSum">Номер кредитного продукта</label>
+            </div>
+            <p></p>
             <p></p>
             <button class="btn btn-outline-warning btn-sm" style="width: 100%;" type="submit">Оформить депозит</button>
+        </form>
+    </div>
+    <p></p>
+    <div class="col-6 col-md-2">
+        <p>Перевод со счёта на счёт</p>
+        <form novalidate ng-submit="transferMoney()">
+            <div class="form-floating input-group-sm">
+                <input type="text" class="form-control"  id="transferSourceAccount" placeholder="Счёт отправителя" ng-model="transferInfo.sourceAccount">
+                <label for="debitCurrency">Счёт отправителя</label>
+            </div>
+            <p></p>
+            <div class="form-floating input-group-sm">
+                <input type="text" class="form-control"  id="transferTargetAccount" placeholder="Счёт получателя" ng-model="transferInfo.targetAccount">
+                <label for="debitCurrency">Счёт получателя</label>
+            </div>
+            <p></p>
+            <p></p>
+            <div class="form-floating input-group-sm">
+                <input type="text" class="form-control"  id="transferAmount" placeholder="Сумма перевода" ng-model="transferInfo.amount">
+                <label for="debitCurrency">Сумма перевода</label>
+            </div>
+            <p></p>
+            <div class="form-floating input-group-sm">
+                <input type="text" class="form-control"  id="transferCurrency" placeholder="Валюта перевода" ng-model="transferInfo.currency">
+                <label for="debitCurrency">Валюта перевода</label>
+            </div>
+            <p></p>
+            <div class="form-floating input-group-sm">
+                <input type="text" class="form-control"  id="transferPaymentPurpose" placeholder="Назначение платежа" ng-model="transferInfo.paymentPurpose">
+                <label for="debitCurrency">Назначение платежа</label>
+            </div>
+            <p></p>
+            <button class="btn btn-outline-warning btn-sm" style="width: 100%;" type="submit">Осуществить перевод</button>
         </form>
     </div>
 </div>

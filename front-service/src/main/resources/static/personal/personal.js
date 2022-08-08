@@ -1,7 +1,10 @@
 angular.module('gbank-front').controller('personalController', function ($scope, $http, $location, $localStorage) {
-    const contextPath = 'http://localhost:5555/core/';
+    const contextPath = 'http://localhost:5555/core/'
+
     $scope.creditInfo = undefined;
     $scope.debitInfo = undefined;
+    $scope.transferInfo = undefined;
+
     $scope.loadAccounts = function () {
         $http({
             url: contextPath + 'api/v1/account/',
@@ -37,6 +40,7 @@ angular.module('gbank-front').controller('personalController', function ($scope,
             $scope.loadAccounts();
         });
     };
+
     $scope.createDebitAccount = function () {
         $http({
             url: contextPath + 'api/v1/account/debit',
@@ -48,6 +52,16 @@ angular.module('gbank-front').controller('personalController', function ($scope,
         });
     };
 
+    $scope.transferMoney = function () {
+        $http({
+            url: contextPath + 'api/v1/order',
+            method: 'POST',
+            data: $scope.transferInfo
+        }).then(function (response) {
+            $scope.transferInfo = null;
+            $scope.loadAccounts();
+        });
+    };
 
     $scope.loadAccounts();
 });

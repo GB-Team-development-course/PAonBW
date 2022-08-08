@@ -57,7 +57,7 @@ public class AccountController {
     public Response<AccountDto> createCreditAccount(@RequestHeader String username, @RequestBody CreateAccountRequest createAccountDto) {
         return accountOperationService.createCreditAccount(
                 username,
-                Currency.getById(createAccountDto.getCurrency()),
+                createAccountDto.getCurrency(),
                 createAccountDto.getCredit(),
                 createAccountDto.getProductId());
     }
@@ -68,7 +68,7 @@ public class AccountController {
     public Response<AccountDto> createDebitAccount(@RequestHeader String username, @RequestBody CreateAccountRequest createAccountDto) {
         return accountOperationService.createDebitAccount(
                 username,
-                Currency.getById(createAccountDto.getCurrency()),
+                createAccountDto.getCurrency(),
                 createAccountDto.getProductId());
     }
 
