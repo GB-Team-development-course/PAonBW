@@ -27,11 +27,13 @@ public class AccountController {
     private final AccountOperationService accountOperationService;
 
     @GetMapping("/activeDebit/{currentDate}")
+    @Operation(summary = "Запрос на получение дебетовых счетов", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = List.class)))})
     public List<AccountDto> findDebitByDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate currentDate) {
         return accountOperationService.findAllDebitActiveByDate(currentDate);
     }
 
     @GetMapping("/activeCredit/{currentDate}")
+    @Operation(summary = "Запрос на получение кредитных счетов", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = List.class)))})
     public List<AccountDto> findCreditByDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate currentDate) {
         return accountOperationService.findAllCreditActiveByDate(currentDate);
     }
@@ -75,6 +77,7 @@ public class AccountController {
 
     @PutMapping("/block/{accountNum}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Запрос на блокировку счета", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = AccountDto.class)))})
     public Response<AccountDto> blockAccount(@RequestHeader String username, @PathVariable String accountNum) {
         return accountOperationService.blockAccount(username, accountNum);
 
@@ -82,6 +85,7 @@ public class AccountController {
 
     @PutMapping("/close/{accountNum}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Запрос на закрытие счета", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = AccountDto.class)))})
     public Response<AccountDto> closeAccount(@RequestHeader String username, @PathVariable String accountNum) {
         return accountOperationService.closeAccount(username, accountNum);
     }

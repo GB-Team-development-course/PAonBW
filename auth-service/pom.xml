@@ -60,6 +60,11 @@
             <version>4.9.1</version>
         </dependency>
         <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.6.9</version>
+        </dependency>
+        <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
             <version>${testContainers.version}</version>
