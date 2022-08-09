@@ -39,7 +39,9 @@
         <p>Оформить кредит</p>
         <form novalidate ng-submit="createCreditAccount()">
             <div class="form-floating input-group-sm">
-                <input type="text" class="form-control"  id="creditCurrency" placeholder="Валюта кредита" ng-model="creditInfo.currency">
+                <select name="creditCurrency" id="creditCurrency" ng-model="creditInfo.currency">
+                        <option ng-repeat="option in creditInfo.currenciesList" value="{{option.currencyId}}">{{option.currencyCodeAndName}}</option>
+                </select>
                 <label for="creditCurrency">Валюта кредита</label>
             </div>
             <p></p>
