@@ -11,12 +11,39 @@ angular.module('gbank-front').controller('personalController', function ($scope,
             method: 'GET'})
             .then(function (response) {
                 console.log(response.data.data)
+
                 $scope.creditInfo = {
+                    currency: null,
+                    currenciesList: response.data
+                };
+
+                $scope.debitInfo = {
                     currency: null,
                     currenciesList: response.data
                 };
             });
 
+    };
+
+    $scope.loadProducts = function () {
+        $http({
+            url: contextPath + 'api/v1/product/credit',
+            method: 'GET'})
+            .then(function (response) {
+                console.log(response.data.data)
+                $scope.creditInfo.productId = null;
+                $scope.creditInfo.productList = response.data
+
+            });
+
+        $http({
+            url: contextPath + 'api/v1/product/debit',
+            method: 'GET'})
+            .then(function (response) {
+                console.log(response.data.data)
+                $scope.debitInfo.productId = null;
+                $scope.debitInfo.productList = response.data
+            });
     };
 
     $scope.loadAccounts = function () {
@@ -50,7 +77,8 @@ angular.module('gbank-front').controller('personalController', function ($scope,
             method: 'POST',
             data: $scope.creditInfo
         }).then(function (response) {
-            $scope.creditInfo = null;
+            $scope.creditInfo.productId = null;
+            $scope.creditInfo.currency = null;
             $scope.loadAccounts();
         });
     };
@@ -61,7 +89,8 @@ angular.module('gbank-front').controller('personalController', function ($scope,
             method: 'POST',
             data: $scope.debitInfo
         }).then(function (response) {
-            $scope.debitInfo = null;
+            $scope.debitInfo.productId = null;
+            $scope.debitInfo.currency = null;
             $scope.loadAccounts();
         });
     };
@@ -78,6 +107,8 @@ angular.module('gbank-front').controller('personalController', function ($scope,
     };
 
     $scope.loadCurrencies();
+
+    $scope.loadProducts();
 
     $scope.loadAccounts();
 
