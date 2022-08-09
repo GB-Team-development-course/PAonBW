@@ -5,6 +5,20 @@ angular.module('gbank-front').controller('personalController', function ($scope,
     $scope.debitInfo = undefined;
     $scope.transferInfo = undefined;
 
+    $scope.loadCurrencies = function () {
+        $http({
+            url: contextPath + 'api/v1/currency/',
+            method: 'GET'})
+            .then(function (response) {
+                console.log(response.data.data)
+                $scope.creditInfo = {
+                    currency: null,
+                    currenciesList: response.data
+                };
+            });
+
+    };
+
     $scope.loadAccounts = function () {
         $http({
             url: contextPath + 'api/v1/account/',
@@ -63,5 +77,9 @@ angular.module('gbank-front').controller('personalController', function ($scope,
         });
     };
 
+    $scope.loadCurrencies();
+
     $scope.loadAccounts();
+
+
 });
