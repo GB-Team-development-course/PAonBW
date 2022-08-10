@@ -33,5 +33,21 @@ public class ProductController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/credit")
+    @Operation(summary = "Запрос получения продуктов для всех счетов", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = List.class)))})
+    public List<ProductDto> findAllCredit() {
+        return productService.findAllCreditTypeProduct().stream()
+                .map(productConverter::entityToDto)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/debit")
+    @Operation(summary = "Запрос получения продуктов для всех счетов", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = List.class)))})
+    public List<ProductDto> findAllDebit() {
+        return productService.findAllDebitTypeProduct().stream()
+                .map(productConverter::entityToDto)
+                .collect(Collectors.toList());
+    }
+
 
 }

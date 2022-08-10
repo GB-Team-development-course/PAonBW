@@ -13,6 +13,7 @@ public class ProductConverter {
         ProductDto out = new ProductDto();
         out.setId(product.getId());
         out.setName(product.getName());
+        out.setProductType(product.getProductType());
         out.setProductStatus(product.getProductStatus());
         out.setInterestRatePercent(product.getInterestRatePercent());
         return out;
