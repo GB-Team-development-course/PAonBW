@@ -89,6 +89,13 @@ public class ValidationTransferService {
             errors.add("Перевод доступен только на другой счет !");
         }
 
+        if (sourceAccount.get().getCurrency()!=orderDtoRequest.getCurrency()){
+            errors.add("Валюта счёта списания не соответствует валюте в переводе");
+        }
+
+        if (targetAccount.get().getCurrency()!=orderDtoRequest.getCurrency()){
+            errors.add("Валюта счёта начисления не соответствует валюте в переводе");
+        }
 
         if (sourceAccount.get().getAccountType() == AccountType.C
                 && sourceBalance.get().getCreditBalance().compareTo(orderDtoRequest.getAmount()) < 0) {

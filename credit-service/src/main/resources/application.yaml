@@ -6,8 +6,12 @@ integrations:
         url: http://core-service:9090
 
 # ежедневно в 00:01
+#cron:
+#  expression: 0 1 0 * * *
+
+# каждую минуту (Для тестирования)
 cron:
-  expression: 0 1 0 * * *
+  expression: 1 * * * * *
 
 spring:
 

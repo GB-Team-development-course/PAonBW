@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gbank.pabw.core.converters.AccountConverter;
+import ru.gbank.pabw.core.converters.AccountWithBalanceConverter;
 import ru.gbank.pabw.core.entities.Account;
 import ru.gbank.pabw.core.entities.Balance;
+import ru.gbank.pabw.model.dto.AccountWithBalanceDto;
 import ru.gbank.pabw.model.enums.AccountType;
 import ru.gbank.pabw.model.enums.ResponseCode;
 import ru.gbank.pabw.model.response.Response;
@@ -21,7 +23,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -29,11 +34,13 @@ public class AccountOperationService {
 
     private final static String FIRST_DEBIT_ACCOUNT_NUMBER = "D000000001";
     private final static String FIRST_CREDIT_ACCOUNT_NUMBER = "C000000001";
+    private final String TECHNICAL_ACCOUNT_NUMBER = "T1001";
     private final AccountService accountService;
     private final BalanceOperationService balanceOperationService;
     private final BalanceService balanceService;
     private final AccountConverter accountConverter;
     private final ProductService productService;
+    private final AccountWithBalanceConverter accountWithBalanceConverter;
 
     @Transactional
     public Response<AccountDto> createCreditAccount(String username, Currency currency, BigDecimal credit, long productId) {
@@ -53,6 +60,12 @@ public class AccountOperationService {
 
         accountService.create(account);
         balanceOperationService.createCreditBalance(account, credit);
+
+        Balance technicalBalance = balanceService
+                .findByAccountId(accountService.findByAccountNumber(TECHNICAL_ACCOUNT_NUMBER).get().getId())
+                .get();
+
+        technicalBalance.setDebitBalance(technicalBalance.getDebitBalance().subtract(credit));
 
         return ResponseFactory.successResponse(
                 ResponseCode.ACCOUNT_OPERATION_COMPLETE,
@@ -115,7 +128,7 @@ public class AccountOperationService {
         }
 
         if (!checkClosingPossibility(account.get())) {
-            throw new CloseAccountException(String.format("Счет с идентификатором '%s' не найден", accountNum));
+            throw new CloseAccountException(String.format("Счет '%s' нельзя закрыть, на нём ещё есть деньги!", accountNum));
         }
 
         account.get().setAccountStatus(AccountStatus.CLOSED);
@@ -126,11 +139,20 @@ public class AccountOperationService {
 
     }
 
-    public Response<List<AccountDto>> findAll(String username) {
+    @Transactional
+    public Response<List<AccountWithBalanceDto>> findAll(String username) {
 
-        List<AccountDto> accountDtos = accountService.findAll(username)
+
+        Map<Long, Balance> balances = balanceService
+                .findAll()
                 .stream()
-                .map(accountConverter::entityToDto).toList();
+                .collect(Collectors.toMap(b -> b.getAccount().getId(), Function.identity()));
+
+
+        List<AccountWithBalanceDto> accountDtos = accountService.findAll(username)
+                .stream()
+                .map(a -> accountWithBalanceConverter.entityToDto(a, balances.get(a.getId())))
+                .toList();
 
         return ResponseFactory.successResponse(
                 ResponseCode.ACCOUNT_OPERATION_COMPLETE,

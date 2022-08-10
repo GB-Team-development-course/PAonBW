@@ -6,13 +6,14 @@
         <div class="col-sm-6 col-md-10">
             <table class="table table-hover">
                 <tr>
-                    <td>Type</td>
-                    <td>Number</td>
-                    <td>Status</td>
-                    <td>Currency</td>
-                    <td>Created at</td>
-                    <td>Blocked at</td>
-                    <td>Closed at</td>
+                    <td>Тип счёта</td>
+                    <td>Номер счёта</td>
+                    <td>Статус счёта</td>
+                    <td>Валюта счёта</td>
+                    <td>Название продукта</td>
+                    <td>Дебетовый баланс</td>
+                    <td>Кредитный баланс</td>
+                    <td>Задолженность</td>
 
                 </tr>
                 <tbody>
@@ -21,9 +22,10 @@
                     <td>{{a.accountNumber}}</td>
                     <td>{{a.accountStatus}}</td>
                     <td>{{a.currency}}</td>
-                    <td>{{a.dtCreated}}</td>
-                    <td>{{a.dtBlocked}}</td>
-                    <td>{{a.dtClosed}}</td>
+                    <td>{{a.productName}}</td>
+                    <td>{{a.debitBalance}}</td>
+                    <td>{{a.creditBalance}}</td>
+                    <td>{{a.creditDebt}}</td>
                     <td>
                     <button class="btn btn-secondary" ng-click="blockAccount(a.accountNumber)">Заблокировать счёт</button>
                     </td>
@@ -104,8 +106,10 @@
             </div>
             <p></p>
             <div class="form-floating input-group-sm">
-                <input type="text" class="form-control"  id="transferCurrency" placeholder="Валюта перевода" ng-model="transferInfo.currency">
-                <label for="debitCurrency">Валюта перевода</label>
+                <select class="form-select" name="transferCurrency" id="ransferCurrency" ng-model="transferInfo.currency">
+                    <option value="">---Валюта перевода---</option>
+                    <option ng-repeat="option in creditInfo.currenciesList"  value="{{option.currencyId}}">{{option.currencyCodeAndName}}</option>
+                </select>
             </div>
             <p></p>
             <div class="form-floating input-group-sm">
