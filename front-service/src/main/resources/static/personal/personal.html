@@ -39,7 +39,7 @@
         <p>Оформить кредит</p>
         <form novalidate ng-submit="createCreditAccount()">
             <div class="form-floating input-group-sm">
-                <select name="creditCurrency" id="creditCurrency" ng-model="creditInfo.currency">
+                <select class="form-select" name="creditCurrency" id="creditCurrency" ng-model="creditInfo.currency">
                         <option value="">---Выберите валюту---</option>
                         <option ng-repeat="option in creditInfo.currenciesList"  value="{{option.currencyId}}">{{option.currencyCodeAndName}}</option>
                 </select>
@@ -51,7 +51,7 @@
             </div>
             <p></p>
             <div class="form-floating input-group-sm">
-                <select name="creditProduct" id="creditProductId" ng-model="creditInfo.productId">
+                <select class="form-select" name="creditProduct" id="creditProductId" ng-model="creditInfo.productId">
                     <option value="">---Выберите кредитный продукт---</option>
                     <option ng-repeat="option in creditInfo.productList"  value="{{option.id}}">{{option.name}}</option>
                 </select>
@@ -65,14 +65,15 @@
         <p>Оформить депозит</p>
         <form novalidate ng-submit="createDebitAccount()">
             <div class="form-floating input-group-sm">
-                <select name="debitCurrency" id="debitCurrency" ng-model="debitInfo.currency">
+                <select class="form-select" name="debitCurrency" id="debitCurrency" ng-model="debitInfo.currency">
                     <option value="">---Выберите валюту---</option>
                     <option ng-repeat="option in debitInfo.currenciesList"  value="{{option.currencyId}}">{{option.currencyCodeAndName}}</option>
                 </select>
             </div>
+            <p></p>
             <div class="form-floating input-group-sm">
 
-                <select name="creditProduct" id="debitProductId" ng-model="debitInfo.productId">
+                <select class="form-select" name="creditProduct" id="debitProductId" ng-model="debitInfo.productId">
                     <option value="">---Выберите дебетовый продукт---</option>
                     <option ng-repeat="option in debitInfo.productList"  value="{{option.id}}">{{option.name}}</option>
                 </select>
