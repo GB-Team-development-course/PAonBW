@@ -16,8 +16,12 @@ angular.module('gbank-front').controller('personalController', function ($scope,
                     currency: null,
                     currenciesList: response.data
                 };
-
                 $scope.debitInfo = {
+                    currency: null,
+                    currenciesList: response.data
+                };
+
+                $scope.transferInfo = {
                     currency: null,
                     currenciesList: response.data
                 };
@@ -38,7 +42,8 @@ angular.module('gbank-front').controller('personalController', function ($scope,
 
         $http({
             url: contextPath + 'api/v1/product/debit',
-            method: 'GET'})
+            method: 'GET'
+        })
             .then(function (response) {
                 console.log(response.data.data)
                 $scope.debitInfo.productId = null;
@@ -54,20 +59,31 @@ angular.module('gbank-front').controller('personalController', function ($scope,
             console.log(response.data.data)
             $scope.AccountsPage = response.data.data;
         });
-    };
-    $scope.blockAccount = function (accountNumber) {
-        $http.put(contextPath + 'api/v1/account/block/' + accountNumber)
-            .then(function (response) {
-                $scope.loadAccounts();
-            });
     }
+
+    $scope.blockAccount = function (accountNumber) {
+        $http({
+            url: contextPath + 'api/v1/account/block/' + accountNumber,
+            method: 'PUT'
+        })
+            .then(function (response) {
+                alert("Счёт " + response.data.data.accountNumber + " заблокирован")
+                $scope.loadAccounts();
+            })
+            .catch(function (response) {
+                    alert(response.data.data)
+                }
+            );
+    }
+
     $scope.closeAccount = function (accountNumber) {
         $http.put(contextPath + 'api/v1/account/close/' + accountNumber)
             .then(function (response) {
-                if (response.data.code===204){
-                    alert("Счёт невозможно закрыть")
-                }
+                alert("Счёт " + response.data.data.accountNumber + " закрыт");
                 $scope.loadAccounts();
+            })
+            .catch(function (response) {
+                alert(response.data.data)
             });
     }
 
@@ -103,7 +119,9 @@ angular.module('gbank-front').controller('personalController', function ($scope,
         }).then(function (response) {
             $scope.transferInfo = null;
             $scope.loadAccounts();
-        });
+        }).catch(function (response) {
+            alert(response.data.data)}
+        )
     };
 
     $scope.loadCurrencies();
