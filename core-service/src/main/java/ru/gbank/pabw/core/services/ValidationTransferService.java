@@ -44,6 +44,30 @@ public class ValidationTransferService {
 
     private void validateAccountsAndBalances(OrderDtoRequest orderDtoRequest, List<String> errors, Order order,String username) {
 
+
+        if (orderDtoRequest.getSourceAccount().startsWith("T")) {
+            String accountNumber = null;
+            switch (orderDtoRequest.getCurrency()) {
+                case USD -> accountNumber = "T1001";
+                case RUB -> accountNumber = "T1002";
+                case EUR -> accountNumber = "T1003";
+                case CNY -> accountNumber = "T1004";
+            }
+            orderDtoRequest.setSourceAccount(accountNumber);
+            username="Technical";
+        }
+
+        if (orderDtoRequest.getTargetAccount().startsWith("T")) {
+            String accountNumber = null;
+            switch (orderDtoRequest.getCurrency()) {
+                case USD -> accountNumber = "T1001";
+                case RUB -> accountNumber = "T1002";
+                case EUR -> accountNumber = "T1003";
+                case CNY -> accountNumber = "T1004";
+            }
+            orderDtoRequest.setTargetAccount(accountNumber);
+        }
+
         Optional<Account> sourceAccount = accountService.findByClientUsernameAndAccountNumber(username,orderDtoRequest.getSourceAccount());
         Optional<Account> targetAccount = accountService.findByAccountNumber(orderDtoRequest.getTargetAccount());
 

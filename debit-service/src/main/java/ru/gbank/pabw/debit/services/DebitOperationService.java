@@ -40,7 +40,7 @@ public class DebitOperationService {
    private final AccrualService accrualService;
    private final OrderIntegrationService orderIntegrationService;
 
-   private final String TECHNICAL_ACCOUNT_NUMBER = "T1001";
+   private final String TECHNICAL_ACCOUNT_NUMBER = "T";
    private final String TECHNICAL_ACCOUNT_USERNAME = "Technical";
 
    public void calculateDailyAccruals(LocalDate currentDate) {
