@@ -39,7 +39,7 @@ public class CreditOperationService {
 	private final ProductsServiceIntegration productsServiceIntegration;
 	private final InterestService interestService;
 	private final OrderIntegrationService orderIntegrationService;
-	private final String TECHNICAL_ACCOUNT_NUMBER = "T1001";
+	private final String TECHNICAL_ACCOUNT_NUMBER = "T";
 
 	public void calculateDailyInterests(LocalDate currentDate) {
 

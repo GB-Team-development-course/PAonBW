@@ -34,7 +34,6 @@ public class AccountOperationService {
 
     private final static String FIRST_DEBIT_ACCOUNT_NUMBER = "D000000001";
     private final static String FIRST_CREDIT_ACCOUNT_NUMBER = "C000000001";
-    private final String TECHNICAL_ACCOUNT_NUMBER = "T1001";
     private final AccountService accountService;
     private final BalanceOperationService balanceOperationService;
     private final BalanceService balanceService;
@@ -61,8 +60,17 @@ public class AccountOperationService {
         accountService.create(account);
         balanceOperationService.createCreditBalance(account, credit);
 
+        String technicalAccountNumber = null;
+
+        switch (currency){
+            case USD -> technicalAccountNumber = "T1001";
+            case RUB -> technicalAccountNumber = "T1002";
+            case EUR -> technicalAccountNumber = "T1003";
+            case CNY -> technicalAccountNumber = "T1004";
+        }
+
         Balance technicalBalance = balanceService
-                .findByAccountId(accountService.findByAccountNumber(TECHNICAL_ACCOUNT_NUMBER).get().getId())
+                .findByAccountId(accountService.findByAccountNumber(technicalAccountNumber).get().getId())
                 .get();
 
         technicalBalance.setDebitBalance(technicalBalance.getDebitBalance().subtract(credit));
