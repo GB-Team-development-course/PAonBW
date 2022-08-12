@@ -3,6 +3,7 @@ package ru.gbank.pabw.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.gbank.pabw.model.enums.Currency;
 
 import java.math.BigDecimal;
 
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class CreateAccountRequest {
 
-    private Integer currency;
+    private Currency currency;
     private BigDecimal credit;
     private long productId;
 

@@ -80,7 +80,7 @@ public class AccountControllerIntegrationTest {
     @Test
     void createDebitAccount() throws Exception {
         CreateAccountRequest accountRequest = new CreateAccountRequest(
-                0,
+                Currency.USD,
                 BigDecimal.valueOf(500),
                 1
         );
@@ -124,7 +124,7 @@ public class AccountControllerIntegrationTest {
     @Test
     void createCreditAccount() throws Exception {
         CreateAccountRequest accountRequest = new CreateAccountRequest(
-                0,
+                Currency.USD,
                 BigDecimal.valueOf(500L),
                 1
         );

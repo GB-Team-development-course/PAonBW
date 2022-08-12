@@ -10,9 +10,6 @@ import ru.gbank.pabw.core.entities.Balance;
 import ru.gbank.pabw.core.entities.Order;
 import ru.gbank.pabw.model.enums.AccountType;
 import ru.gbank.pabw.model.enums.OrderStatus;
-
-import javax.transaction.Transactional;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
@@ -22,32 +19,45 @@ public class TransferOperationService {
     private final OrderService orderService;
     private final BalanceService balanceService;
 
-    @Transactional
-    public Order doTransferByOrder(Account sourceAccount, Account targetAccount, Order order) {
-        doTransferFromBalanceToTargetBalance(sourceAccount, targetAccount, order.getAmount());
+    private final AccountService accountService;
+
+
+    public Order doTransferByOrder(Order order) {
+
+        doTransfer(order);
 
         order.setOrderStatus(OrderStatus.SUCCESS);
         order.setExecutionEnd(LocalDateTime.now());
         return orderService.save(order);
     }
 
-    private void doTransferFromBalanceToTargetBalance(Account accountSource, Account accountTarget, BigDecimal valueTransfer) {
-        // get() потому что проверка сущности баланса была в сервисе валидации
-        Balance balanceSource = balanceService.findByAccountId(accountSource.getId()).get();
-        Balance balanceTarget = balanceService.findByAccountId(accountTarget.getId()).get();
+    private void doTransfer(Order order) {
 
-        if (accountSource.getAccountType().compareTo(AccountType.C) == 0) {
-            balanceSource.setCreditBalance(balanceSource.getCreditBalance().subtract(valueTransfer));
-        } else {
-            balanceSource.setDebitBalance(balanceSource.getDebitBalance().subtract(valueTransfer));
+        Account sourceAccount = accountService.findByAccountNumber(order.getSourceAccount()).get();
+        Account targetAccount = accountService.findByAccountNumber(order.getTargetAccount()).get();
+        Balance sourceBalance = balanceService.findByAccountId(sourceAccount.getId()).get();
+        Balance targetBalance = balanceService.findByAccountId(targetAccount.getId()).get();
+
+        if (sourceAccount.getAccountType()==AccountType.C) {
+            sourceBalance.setCreditBalance(sourceBalance.getCreditBalance().subtract(order.getAmount()));
         }
 
-        if (accountTarget.getAccountType().compareTo(AccountType.C) == 0) {
-            balanceTarget.setCreditBalance(balanceTarget.getCreditBalance().add(valueTransfer));
-        } else {
-            balanceTarget.setCreditBalance(balanceTarget.getDebitBalance().add(valueTransfer));
+        if (sourceAccount.getAccountType() == AccountType.D ||
+                sourceAccount.getAccountType() == AccountType.T) {
+            sourceBalance.setDebitBalance(sourceBalance.getDebitBalance().subtract(order.getAmount()));
         }
-        balanceService.save(balanceSource);
-        balanceService.save(balanceTarget);
+
+        if (targetAccount.getAccountType() == AccountType.C){
+            targetBalance.setCreditBalance(targetBalance.getCreditBalance().add(order.getAmount()));
+        }
+
+        if (targetAccount.getAccountType() == AccountType.D ||
+                targetAccount.getAccountType() == AccountType.T){
+            targetBalance.setDebitBalance(targetBalance.getDebitBalance().add(order.getAmount()));
+        }
+
+        balanceService.save(sourceBalance);
+        balanceService.save(targetBalance);
+
     }
 }

@@ -14,9 +14,9 @@ import ru.gbank.pabw.model.response.ResponseFactory;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<CoreError> failedValidateOrderTransfer(ValidationProcessException e) {
+    public ResponseEntity<Response> failedValidateOrderTransfer(ValidationProcessException e) {
         log.error(e.getMessage(), e);
-        return new ResponseEntity<>(new CoreError("FAILED_VALIDATION_PROCESS", e.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ResponseFactory.errorResponse(ResponseCode.ACCESS_RIGHTS_VALIDATION_ERROR,e.getMessage()), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler
     public ResponseEntity<Response> failedFoundAccountException(AccountNotFoundException e) {
@@ -26,12 +26,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<Response> failedCloseAccountException(CloseAccountException e) {
         log.error(e.getMessage());
-        return new ResponseEntity<>(ResponseFactory.errorResponse(ResponseCode.ACCOUNT_CLOSED_ERROR,e.getMessage()), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(ResponseFactory.errorResponse(ResponseCode.ACCOUNT_CLOSED_ERROR,e.getMessage()), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler
     public ResponseEntity<Response> failedBlockAccountException(BlockAccountException e) {
         log.error(e.getMessage());
-        return new ResponseEntity<>(ResponseFactory.errorResponse(ResponseCode.ACCOUNT_BLOCK_ERROR,e.getMessage()), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(ResponseFactory.errorResponse(ResponseCode.ACCOUNT_BLOCK_ERROR,e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
 }

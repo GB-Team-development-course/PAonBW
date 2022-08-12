@@ -17,6 +17,9 @@ public class RateCalculationUtils {
 		BigDecimal percent = new BigDecimal("100");
 		BigDecimal daysInYear = BigDecimal.valueOf(Year.now().length());
 
-		return rate.divide(percent, 10, RoundingMode.HALF_UP).divide(daysInYear, 10, RoundingMode.HALF_UP).multiply(sumOnAccount).setScale(10, RoundingMode.HALF_UP);
+		return rate.divide(percent, 10, RoundingMode.HALF_UP)
+				.divide(daysInYear, 10, RoundingMode.HALF_UP)
+				.multiply(sumOnAccount)
+				.setScale(2, RoundingMode.HALF_UP);
 	}
 }

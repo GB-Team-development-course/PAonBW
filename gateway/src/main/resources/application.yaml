@@ -44,7 +44,7 @@ spring:
           filters:
             - StripPrefix=1
             - PrefixPath=/
-            - JwtAuthFilter'
+            - JwtAuthFilter
         - id: credit-service
           uri: lb://credit-service
           predicates:

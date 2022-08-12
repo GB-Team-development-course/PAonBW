@@ -6,13 +6,14 @@
         <div class="col-sm-6 col-md-10">
             <table class="table table-hover">
                 <tr>
-                    <td>Type</td>
-                    <td>Number</td>
-                    <td>Status</td>
-                    <td>Currency</td>
-                    <td>Created at</td>
-                    <td>Blocked at</td>
-                    <td>Closed at</td>
+                    <td>Тип счёта</td>
+                    <td>Номер счёта</td>
+                    <td>Статус счёта</td>
+                    <td>Валюта счёта</td>
+                    <td>Название продукта</td>
+                    <td>Дебетовый баланс</td>
+                    <td>Кредитный баланс</td>
+                    <td>Задолженность</td>
 
                 </tr>
                 <tbody>
@@ -21,9 +22,10 @@
                     <td>{{a.accountNumber}}</td>
                     <td>{{a.accountStatus}}</td>
                     <td>{{a.currency}}</td>
-                    <td>{{a.dtCreated}}</td>
-                    <td>{{a.dtBlocked}}</td>
-                    <td>{{a.dtClosed}}</td>
+                    <td>{{a.productName}}</td>
+                    <td>{{a.debitBalance}}</td>
+                    <td>{{a.creditBalance}}</td>
+                    <td>{{a.creditDebt}}</td>
                     <td>
                     <button class="btn btn-secondary" ng-click="blockAccount(a.accountNumber)">Заблокировать счёт</button>
                     </td>
@@ -39,13 +41,22 @@
         <p>Оформить кредит</p>
         <form novalidate ng-submit="createCreditAccount()">
             <div class="form-floating input-group-sm">
-                <input type="text" class="form-control"  id="creditCurrency" placeholder="Валюта кредита" ng-model="creditInfo.currency">
-                <label for="creditCurrency">Валюта кредита</label>
+                <select class="form-select" name="creditCurrency" id="creditCurrency" ng-model="creditInfo.currency">
+                        <option value="">---Выберите валюту---</option>
+                        <option ng-repeat="option in creditInfo.currenciesList"  value="{{option.currencyId}}">{{option.currencyCodeAndName}}</option>
+                </select>
             </div>
             <p></p>
             <div class="form-floating input-group-sm">
                 <input type="text" class="form-control"  id="creditSum" placeholder="Сумма кредита" ng-model="creditInfo.credit">
                 <label for="creditSum">Сумма кредита</label>
+            </div>
+            <p></p>
+            <div class="form-floating input-group-sm">
+                <select class="form-select" name="creditProduct" id="creditProductId" ng-model="creditInfo.productId">
+                    <option value="">---Выберите кредитный продукт---</option>
+                    <option ng-repeat="option in creditInfo.productList"  value="{{option.id}}">{{option.name}}</option>
+                </select>
             </div>
             <p></p>
             <button class="btn btn-outline-warning btn-sm" style="width: 100%;" type="submit">Оформить кредит</button>
@@ -56,11 +67,57 @@
         <p>Оформить депозит</p>
         <form novalidate ng-submit="createDebitAccount()">
             <div class="form-floating input-group-sm">
-                <input type="text" class="form-control"  id="debitCurrency" placeholder="Валюта депозита" ng-model="debitInfo.currency">
-                <label for="debitCurrency">Валюта</label>
+                <select class="form-select" name="debitCurrency" id="debitCurrency" ng-model="debitInfo.currency">
+                    <option value="">---Выберите валюту---</option>
+                    <option ng-repeat="option in debitInfo.currenciesList"  value="{{option.currencyId}}">{{option.currencyCodeAndName}}</option>
+                </select>
             </div>
             <p></p>
+            <div class="form-floating input-group-sm">
+
+                <select class="form-select" name="creditProduct" id="debitProductId" ng-model="debitInfo.productId">
+                    <option value="">---Выберите дебетовый продукт---</option>
+                    <option ng-repeat="option in debitInfo.productList"  value="{{option.id}}">{{option.name}}</option>
+                </select>
+            </div>
+            <p></p>
+            <p></p>
             <button class="btn btn-outline-warning btn-sm" style="width: 100%;" type="submit">Оформить депозит</button>
+        </form>
+    </div>
+    <p></p>
+    <div class="col-6 col-md-2">
+        <p>Перевод со счёта на счёт</p>
+        <form novalidate ng-submit="transferMoney()">
+            <div class="form-floating input-group-sm">
+                <input type="text" class="form-control"  id="transferSourceAccount" placeholder="Счёт отправителя" ng-model="transferInfo.sourceAccount">
+                <label for="debitCurrency">Счёт отправителя</label>
+            </div>
+            <p></p>
+            <div class="form-floating input-group-sm">
+                <input type="text" class="form-control"  id="transferTargetAccount" placeholder="Счёт получателя" ng-model="transferInfo.targetAccount">
+                <label for="debitCurrency">Счёт получателя</label>
+            </div>
+            <p></p>
+            <p></p>
+            <div class="form-floating input-group-sm">
+                <input type="text" class="form-control"  id="transferAmount" placeholder="Сумма перевода" ng-model="transferInfo.amount">
+                <label for="debitCurrency">Сумма перевода</label>
+            </div>
+            <p></p>
+            <div class="form-floating input-group-sm">
+                <select class="form-select" name="transferCurrency" id="ransferCurrency" ng-model="transferInfo.currency">
+                    <option value="">---Валюта перевода---</option>
+                    <option ng-repeat="option in creditInfo.currenciesList"  value="{{option.currencyId}}">{{option.currencyCodeAndName}}</option>
+                </select>
+            </div>
+            <p></p>
+            <div class="form-floating input-group-sm">
+                <input type="text" class="form-control"  id="transferPaymentPurpose" placeholder="Назначение платежа" ng-model="transferInfo.paymentPurpose">
+                <label for="debitCurrency">Назначение платежа</label>
+            </div>
+            <p></p>
+            <button class="btn btn-outline-warning btn-sm" style="width: 100%;" type="submit">Осуществить перевод</button>
         </form>
     </div>
 </div>
