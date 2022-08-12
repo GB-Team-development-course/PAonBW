@@ -31,7 +31,7 @@ angular.module('gbank-front').controller('personalController', function ($scope,
 
     $scope.loadProducts = function () {
         $http({
-            url: contextPath + 'api/v1/product/credit',
+            url: contextPath + 'api/v1/product/CREDIT',
             method: 'GET'})
             .then(function (response) {
                 console.log(response.data.data)
@@ -41,7 +41,7 @@ angular.module('gbank-front').controller('personalController', function ($scope,
             });
 
         $http({
-            url: contextPath + 'api/v1/product/debit',
+            url: contextPath + 'api/v1/product/DEPOSIT',
             method: 'GET'
         })
             .then(function (response) {
@@ -88,25 +88,29 @@ angular.module('gbank-front').controller('personalController', function ($scope,
     }
 
     $scope.createCreditAccount = function () {
+        $scope.creditInfo.accountType = 'C';
         $http({
-            url: contextPath + 'api/v1/account/credit',
+            url: contextPath + 'api/v1/account/',
             method: 'POST',
             data: $scope.creditInfo
         }).then(function (response) {
             $scope.creditInfo.productId = null;
             $scope.creditInfo.currency = null;
+            $scope.creditInfo.accountType = null;
             $scope.loadAccounts();
         });
     };
 
     $scope.createDebitAccount = function () {
+        $scope.debitInfo.accountType = 'D';
         $http({
-            url: contextPath + 'api/v1/account/debit',
+            url: contextPath + 'api/v1/account/',
             method: 'POST',
             data: $scope.debitInfo
         }).then(function (response) {
             $scope.debitInfo.productId = null;
             $scope.debitInfo.currency = null;
+            $scope.debitInfo.accountType = null;
             $scope.loadAccounts();
         });
     };

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/balance")
 @AllArgsConstructor
-@Tag(name = "Балансы", description = "Методы работы с балаансами")
+@Tag(name = "Балансы", description = "Методы работы с балансами")
 public class BalanceController {
     private final BalanceService balanceService;
     private final BalanceConverter balanceConverter;

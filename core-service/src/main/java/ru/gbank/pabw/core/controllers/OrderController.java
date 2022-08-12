@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.gbank.pabw.core.services.TransferExecutionService;
 import ru.gbank.pabw.model.response.Response;
-import ru.gbank.pabw.model.dto.OrderDtoRequest;
+import ru.gbank.pabw.model.dto.TransferRequest;
 import ru.gbank.pabw.model.dto.OrderDtoResponse;
 
 @RestController
@@ -24,8 +24,8 @@ public class OrderController {
             responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200",
                     content = @Content(schema = @Schema(implementation = OrderDtoResponse.class)))})
     @PostMapping(path = "")
-    public Response<OrderDtoResponse> doTransfer(@RequestHeader("username") String username, @RequestBody OrderDtoRequest orderDtoRequest) {
-        return executionService.executeTransfer(username, orderDtoRequest);
+    public Response<OrderDtoResponse> doTransfer(@RequestHeader("username") String username, @RequestBody TransferRequest transferRequest) {
+        return executionService.executeTransfer(username, transferRequest);
     }
 }
 

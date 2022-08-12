@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.gbank.pabw.model.dto.AccountDto;
 import ru.gbank.pabw.model.dto.BalanceDto;
-import ru.gbank.pabw.model.dto.OrderDtoRequest;
+import ru.gbank.pabw.model.dto.TransferRequest;
 import ru.gbank.pabw.model.dto.ProductDto;
 import ru.gbank.pabw.model.enums.InterestStatus;
 import ru.gbank.pawb.credit.entity.Interest;
@@ -79,13 +79,13 @@ public class CreditOperationService {
 		interestService.saveAll(interests);
 
 		interests.forEach(interest -> {
-			OrderDtoRequest orderDtoRequest = new OrderDtoRequest(
+			TransferRequest transferRequest = new TransferRequest(
 					interest.getTargetAccount(),
 					TECHNICAL_ACCOUNT_NUMBER,
 					interest.getAmount(),
 					interest.getCurrency(),
 					"Списание процентов по кредиту");
-			orderIntegrationService.sentOrderRequest(orderDtoRequest, interest.getUsername());
+			orderIntegrationService.sentOrderRequest(transferRequest, interest.getUsername());
 		});
 	}
 }
