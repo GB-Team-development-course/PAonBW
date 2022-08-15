@@ -8,6 +8,7 @@ import ru.gbank.pabw.core.converters.AccountWithBalanceConverter;
 import ru.gbank.pabw.core.entities.Account;
 import ru.gbank.pabw.core.entities.Balance;
 import ru.gbank.pabw.model.dto.AccountWithBalanceDto;
+import ru.gbank.pabw.model.dto.CreateAccountRequest;
 import ru.gbank.pabw.model.enums.AccountType;
 import ru.gbank.pabw.model.enums.ResponseCode;
 import ru.gbank.pabw.model.response.Response;
@@ -16,7 +17,6 @@ import ru.gbank.pabw.core.exceptions.BlockAccountException;
 import ru.gbank.pabw.core.exceptions.CloseAccountException;
 import ru.gbank.pabw.model.dto.AccountDto;
 import ru.gbank.pabw.model.enums.AccountStatus;
-import ru.gbank.pabw.model.enums.Currency;
 import ru.gbank.pabw.core.utils.AccountUtils;
 import ru.gbank.pabw.core.exceptions.AccountNotFoundException;
 import java.math.BigDecimal;
@@ -42,63 +42,38 @@ public class AccountOperationService {
     private final AccountWithBalanceConverter accountWithBalanceConverter;
 
     @Transactional
-    public Response<AccountDto> createCreditAccount(String username, Currency currency, BigDecimal credit, long productId) {
+    public Response<AccountDto> createAccount(String username, CreateAccountRequest createAccountRequest ) {
 
         Account account = new Account(
                 null,
                 username,
-                AccountType.C,
-                createAccountNumber(AccountType.C),
-                productService.findById(productId).get(),
+                createAccountRequest.getAccountType(),
+                createAccountNumber(createAccountRequest.getAccountType()),
+                productService.findById(createAccountRequest.getProductId()).get(),
                 AccountStatus.ACTIVE,
-                currency, LocalDateTime.now(),
-                null,
-                null,
-                null
-        );
-
-        accountService.create(account);
-        balanceOperationService.createCreditBalance(account, credit);
-
-        String technicalAccountNumber = null;
-
-        switch (currency){
-            case USD -> technicalAccountNumber = "T1001";
-            case RUB -> technicalAccountNumber = "T1002";
-            case EUR -> technicalAccountNumber = "T1003";
-            case CNY -> technicalAccountNumber = "T1004";
-        }
-
-        Balance technicalBalance = balanceService
-                .findByAccountId(accountService.findByAccountNumber(technicalAccountNumber).get().getId())
-                .get();
-
-        technicalBalance.setDebitBalance(technicalBalance.getDebitBalance().subtract(credit));
-
-        return ResponseFactory.successResponse(
-                ResponseCode.ACCOUNT_OPERATION_COMPLETE,
-                accountConverter.entityToDto(account)
-        );
-    }
-
-    @Transactional
-    public Response<AccountDto> createDebitAccount(String username, Currency currency, Long productId) {
-
-        Account account = new Account(
-                null,
-                username,
-                AccountType.D,
-                createAccountNumber(AccountType.D),
-                productService.findById(productId).get(),
-                AccountStatus.ACTIVE,
-                currency,
+                createAccountRequest.getCurrency(),
                 LocalDateTime.now(),
                 null,
                 null,
                 null
         );
+
         accountService.create(account);
-        balanceOperationService.createDebitBalance(account);
+
+        if (createAccountRequest.getAccountType()==AccountType.D){
+            balanceOperationService.createDebitBalance(account);
+        }
+
+        if (createAccountRequest.getAccountType()==AccountType.C){
+
+            balanceOperationService.createCreditBalance(account, createAccountRequest.getCredit());
+
+            Balance technicalBalance = balanceService.findByAccountNumber(
+                    createAccountRequest.getCurrency().getTechnicalAccountNumber()).get();
+
+            technicalBalance.setDebitBalance(technicalBalance.getDebitBalance().subtract(
+                    createAccountRequest.getCredit()));
+        }
 
         return ResponseFactory.successResponse(
                 ResponseCode.ACCOUNT_OPERATION_COMPLETE,
@@ -207,14 +182,18 @@ public class AccountOperationService {
                 && balance.get().getCreditDebt().compareTo(BigDecimal.ZERO) == 0;
     }
 
-    public List<AccountDto> findAllDebitActiveByDate(LocalDate currentDate) {
-        return accountService.findAllDebitActiveByDate(currentDate)
-                .stream()
-                .map(accountConverter::entityToDto).toList();
-    }
+    public List<AccountDto> findAllActiveByDate(AccountType accountType, LocalDate currentDate) {
 
-    public List<AccountDto> findAllCreditActiveByDate(LocalDate currentDate) {
-        return accountService.findAllCreditActiveByDate(currentDate)
+        List<Account> accounts = null;
+
+        if (accountType==AccountType.D){
+            accounts = accountService.findAllDebitActiveByDate(currentDate);
+        }
+        if (accountType==AccountType.C){
+            accounts = accountService.findAllCreditActiveByDate(currentDate);
+        }
+
+        return accounts
                 .stream()
                 .map(accountConverter::entityToDto).toList();
     }

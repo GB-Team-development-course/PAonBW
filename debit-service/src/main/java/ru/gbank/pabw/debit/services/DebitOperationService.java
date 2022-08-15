@@ -16,7 +16,7 @@ import ru.gbank.pabw.debit.integrations.ProductsServiceIntegration;
 import ru.gbank.pabw.debit.utils.RateCalculationUtils;
 import ru.gbank.pabw.model.dto.AccountDto;
 import ru.gbank.pabw.model.dto.BalanceDto;
-import ru.gbank.pabw.model.dto.OrderDtoRequest;
+import ru.gbank.pabw.model.dto.TransferRequest;
 import ru.gbank.pabw.model.dto.ProductDto;
 import ru.gbank.pabw.model.enums.AccrualStatus;
 
@@ -90,14 +90,14 @@ public class DebitOperationService {
       accrualService.saveAll(accruals);
 
       accruals.forEach(accrual -> {
-         OrderDtoRequest orderDtoRequest = new OrderDtoRequest(
+         TransferRequest transferRequest = new TransferRequest(
                  TECHNICAL_ACCOUNT_NUMBER,
                  accrual.getTargetAccount(),
                  accrual.getAmount(),
                  accrual.getCurrency(),
                  "Начисление процентов по счёту"
          );
-         orderIntegrationService.sentOrderRequest(orderDtoRequest,TECHNICAL_ACCOUNT_USERNAME);
+         orderIntegrationService.sentOrderRequest(transferRequest,TECHNICAL_ACCOUNT_USERNAME);
       });
    }
 }

@@ -28,4 +28,8 @@ public class BalanceService {
     public List<Balance> findAll(){
         return balanceRepository.findAll();
     }
+
+    public Optional<Balance> findByAccountNumber(String accountNumber){
+        return balanceRepository.findByAccountNumber(accountNumber);
+    }
 }
