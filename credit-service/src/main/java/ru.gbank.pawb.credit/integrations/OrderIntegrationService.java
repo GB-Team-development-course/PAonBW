@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import ru.gbank.pabw.model.dto.OrderDtoRequest;
+import ru.gbank.pabw.model.dto.TransferRequest;
 
 @Component
 @RequiredArgsConstructor
@@ -16,14 +16,14 @@ public class OrderIntegrationService {
 
 	private final WebClient webClient;
 
-	public String sentOrderRequest(OrderDtoRequest orderDtoRequest, String username) {
+	public String sentOrderRequest(TransferRequest transferRequest, String username) {
 
 		return webClient
                 .post()
                 .uri("/api/v1/order/")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .header("username", username)
-                .body(Mono.just(orderDtoRequest), OrderDtoRequest.class)
+                .body(Mono.just(transferRequest), TransferRequest.class)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();

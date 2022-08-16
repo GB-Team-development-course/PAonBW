@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.gbank.pabw.model.dto.AccountDto;
 import ru.gbank.pabw.model.dto.AccountWithBalanceDto;
 import ru.gbank.pabw.model.dto.CreateAccountRequest;
+import ru.gbank.pabw.model.enums.AccountType;
 import ru.gbank.pabw.model.response.Response;
 import ru.gbank.pabw.core.services.AccountOperationService;
 
@@ -26,18 +27,11 @@ import java.util.List;
 public class AccountController {
     private final AccountOperationService accountOperationService;
 
-    @GetMapping("/activeDebit/{currentDate}")
-    @Operation(summary = "Запрос на получение дебетовых счетов", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = List.class)))})
-    public List<AccountDto> findDebitByDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate currentDate) {
-        return accountOperationService.findAllDebitActiveByDate(currentDate);
+    @GetMapping("/active")
+    @Operation(summary = "Запрос на получение счетов по типам", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = List.class)))})
+    public List<AccountDto> findByDate(@RequestParam AccountType accountType,@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate currentDate) {
+        return accountOperationService.findAllActiveByDate(accountType,currentDate);
     }
-
-    @GetMapping("/activeCredit/{currentDate}")
-    @Operation(summary = "Запрос на получение кредитных счетов", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = List.class)))})
-    public List<AccountDto> findCreditByDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate currentDate) {
-        return accountOperationService.findAllCreditActiveByDate(currentDate);
-    }
-
 
     @Operation(summary = "Запрос на получение счёта по номеру", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = AccountDto.class)))})
     @GetMapping("/{accountNum}")
@@ -53,27 +47,13 @@ public class AccountController {
         return accountOperationService.findAll(username);
     }
 
-    @Operation(summary = "Запрос на создание кредитного счёта", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200")})
-    @PostMapping("/credit")
+    @Operation(summary = "Запрос на создание счёта", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200")})
+    @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public Response<AccountDto> createCreditAccount(@RequestHeader String username, @RequestBody CreateAccountRequest createAccountDto) {
-        return accountOperationService.createCreditAccount(
-                username,
-                createAccountDto.getCurrency(),
-                createAccountDto.getCredit(),
-                createAccountDto.getProductId());
+    public Response<AccountDto> createAccount(@RequestHeader String username, @RequestBody CreateAccountRequest createAccountRequest) {
+        return accountOperationService.createAccount(
+                username,createAccountRequest);
     }
-
-    @Operation(summary = "Запрос на создание дебетового счёта", responses = {@ApiResponse(description = "Успешный ответ", responseCode = "200")})
-    @PostMapping("/debit")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Response<AccountDto> createDebitAccount(@RequestHeader String username, @RequestBody CreateAccountRequest createAccountDto) {
-        return accountOperationService.createDebitAccount(
-                username,
-                createAccountDto.getCurrency(),
-                createAccountDto.getProductId());
-    }
-
 
     @PutMapping("/block/{accountNum}")
     @ResponseStatus(HttpStatus.OK)

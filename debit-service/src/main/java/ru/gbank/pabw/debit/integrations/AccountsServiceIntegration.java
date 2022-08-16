@@ -16,8 +16,9 @@ public class AccountsServiceIntegration {
 
     @Value("${integrations.core-service.url}")
     private String productServiceUrl;
+    private String secondPArtUrl ="/api/v1/account/active?accountType={accountType}&currentDate={currentDate}";
 
     public List<AccountDto> findAllDebitByDate(LocalDate date) {
-        return restTemplate.getForObject(productServiceUrl + "/api/v1/account/activeDebit/" + date, List.class);
+        return restTemplate.getForObject(productServiceUrl + secondPArtUrl,List.class,"D",date );
     }
 }

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDtoRequest {
+public class TransferRequest {
 
     private String sourceAccount;
     private String targetAccount;

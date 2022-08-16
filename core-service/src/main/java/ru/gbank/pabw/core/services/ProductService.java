@@ -23,11 +23,11 @@ public class ProductService {
         return productRepository.findById(productId);
     }
 
-    public List<Product> findAllCreditTypeProduct(){
-        return productRepository.findAllByProductType(ProductType.CREDIT);
+    public List<Product> findAllByType(ProductType productType){
+        return productRepository.findAllByType(productType);
     }
 
     public List<Product> findAllDebitTypeProduct(){
-        return productRepository.findAllByProductType(ProductType.DEPOSIT);
+        return productRepository.findAllByType(ProductType.DEPOSIT);
     }
 }

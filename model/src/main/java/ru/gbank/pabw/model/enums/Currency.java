@@ -15,10 +15,10 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public enum Currency {
 
-    USD(0, 840, "Доллар США"),
-    RUB(1, 810, "Российский рубль"),
-    EUR(2, 978, "Евро"),
-    CNY(3,156, "Китайский юань");
+    USD(0, 840, "Доллар США","T1001"),
+    RUB(1, 810, "Российский рубль","T1002"),
+    EUR(2, 978, "Евро","T1003"),
+    CNY(3,156, "Китайский юань","T1004");
 
     private final static Map<Integer, Currency> LOOKUP_BY_ID = Stream
             .of(Currency.values())
@@ -29,6 +29,8 @@ public enum Currency {
     private final int denomination;
 
     private final String description;
+
+    private final String technicalAccountNumber;
 
     @NonNull
     public static Currency getById(final int currencyId) {

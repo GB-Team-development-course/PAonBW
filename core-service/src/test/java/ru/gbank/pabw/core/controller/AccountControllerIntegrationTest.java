@@ -82,11 +82,12 @@ public class AccountControllerIntegrationTest {
         CreateAccountRequest accountRequest = new CreateAccountRequest(
                 Currency.USD,
                 BigDecimal.valueOf(500),
-                1
+                1,
+                AccountType.D
         );
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post(URL_COMMON + "/debit")
+                .post(URL_COMMON + "/")
                 .header("username", "John")
                 .content(objectMapper.writeValueAsString(accountRequest))
                 .contentType(MediaType.APPLICATION_JSON_VALUE);
@@ -126,11 +127,12 @@ public class AccountControllerIntegrationTest {
         CreateAccountRequest accountRequest = new CreateAccountRequest(
                 Currency.USD,
                 BigDecimal.valueOf(500L),
-                1
+                1,
+                AccountType.C
         );
 
         RequestBuilder request = MockMvcRequestBuilders
-                .post(URL_COMMON + "/credit")
+                .post(URL_COMMON + "/")
                 .header("username", "Jack")
                 .content(objectMapper.writeValueAsString(accountRequest))
                 .contentType(MediaType.APPLICATION_JSON_VALUE);
